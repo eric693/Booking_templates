@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>預約系統模板</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2C1810;
+            --accent: #D4704A;
+            --secondary: #8B6B47;
+            --background: #FAF8F5;
+            --card-bg: #FFFFFF;
+            --text: #1A1A1A;
+            --text-light: #6B6B6B;
+            --border: #E8E3DB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* Header */
+        header {
+            padding: 80px 0 60px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, var(--background) 0%, rgba(250, 248, 245, 0) 100%);
+        }
+
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 72px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--primary);
+            line-height: 1.1;
+            animation: fadeInUp 0.8s ease-out;
+            margin-bottom: 30px;
+        }
+
+        .intro-text {
+            font-size: 20px;
+            color: var(--text-light);
+            max-width: 700px;
+            line-height: 1.8;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        /* Filter Navigation */
+        .filter-nav {
+            padding: 40px 0;
+            border-bottom: 1px solid var(--border);
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+            position: sticky;
+            top: 0;
+            background: var(--background);
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-list {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .filter-list::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .filter-list::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .filter-item {
+            font-size: 15px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            padding: 8px 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            letter-spacing: 0.03em;
+        }
+
+        .filter-item:hover,
+        .filter-item.active {
+            color: var(--primary);
+            border-color: var(--border);
+            background: var(--card-bg);
+        }
+
+        /* Templates Grid */
+        .templates-section {
+            padding: 80px 0;
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 50px;
+        }
+
+        .template-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInUp 0.6s ease-out both;
+            position: relative;
+            opacity: 0;
+        }
+
+        .template-card.show {
+            opacity: 1;
+        }
+
+        .template-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(44, 24, 16, 0.08);
+            border-color: var(--secondary);
+        }
+
+        .template-image {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, var(--border) 0%, #F5F1E8 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .template-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(44, 24, 16, 0) 0%, rgba(44, 24, 16, 0.05) 100%);
+        }
+
+        .template-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .template-card:hover .template-image img {
+            transform: scale(1.05);
+        }
+
+        .template-content {
+            padding: 35px;
+        }
+
+        .template-category {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .template-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .template-description {
+            font-size: 15px;
+            color: var(--text-light);
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .template-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .template-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--primary);
+            text-decoration: none;
+            padding: 12px 24px;
+            border: 1px solid var(--primary);
+            transition: all 0.3s ease;
+            letter-spacing: 0.05em;
+            flex: 1;
+            text-align: center;
+        }
+
+        .template-link:hover {
+            background: var(--primary);
+            color: var(--background);
+        }
+
+        .template-link.secondary {
+            color: var(--text-light);
+            border-color: var(--border);
+        }
+
+        .template-link.secondary:hover {
+            background: var(--border);
+            color: var(--primary);
+            border-color: var(--border);
+        }
+
+        /* Add Template Section */
+        .add-template-section {
+            padding: 60px 0 100px;
+            text-align: center;
+        }
+
+        .add-template-card {
+            background: var(--card-bg);
+            border: 2px dashed var(--border);
+            padding: 60px 40px;
+            max-width: 600px;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+
+        .add-template-card:hover {
+            border-color: var(--accent);
+            background: var(--background);
+        }
+
+        .add-template-card h3 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 32px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .add-template-card p {
+            color: var(--text-light);
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .upload-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .upload-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--background);
+            background: var(--accent);
+            padding: 14px 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.03em;
+        }
+
+        .upload-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(44, 24, 16, 0.15);
+        }
+
+        .upload-btn.secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .upload-btn.secondary:hover {
+            background: var(--primary);
+            color: var(--background);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 50px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.4s ease-out;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-header h2 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 36px;
+            color: var(--primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 32px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 8px;
+            letter-spacing: 0.03em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 15px;
+            color: var(--text);
+            background: var(--background);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: var(--card-bg);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .image-upload-area {
+            border: 2px dashed var(--border);
+            padding: 30px;
+            text-align: center;
+            background: var(--background);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .image-upload-area:hover {
+            border-color: var(--accent);
+        }
+
+        .image-upload-area.dragover {
+            border-color: var(--accent);
+            background: rgba(212, 112, 74, 0.05);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--accent);
+            color: var(--background);
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.05em;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            padding: 50px 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            h1 {
+                font-size: 48px;
+            }
+
+            .templates-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .filter-list {
+                gap: 15px;
+            }
+
+            .modal-content {
+                padding: 30px 25px;
+            }
+
+            .upload-options {
+                flex-direction: column;
+            }
+
+            .template-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>預約系統模板</h1>
+            <p class="intro-text">
+                為不同產業量身打造的專業預約系統模板，每個模板都經過精心設計，
+                可直接套用或依需求客製化，快速建立您的線上預約平台。
+            </p>
+        </div>
+    </header>
+
+    <nav class="filter-nav">
+        <div class="container">
+            <ul class="filter-list">
+                <li class="filter-item active" data-category="all">全部模板</li>
+                <li class="filter-item" data-category="medical">醫療診所</li>
+                <li class="filter-item" data-category="beauty">美容美髮</li>
+                <li class="filter-item" data-category="restaurant">餐廳訂位</li>
+                <li class="filter-item" data-category="fitness">健身運動</li>
+                <li class="filter-item" data-category="education">教育培訓</li>
+                <li class="filter-item" data-category="consulting">專業服務</li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="templates-section">
+        <div class="container">
+            <div class="templates-grid" id="templatesGrid">
+                <!-- Templates will be dynamically inserted here -->
+            </div>
+        </div>
+    </section>
+
+    <section class="add-template-section">
+        <div class="container">
+            <div class="add-template-card">
+                <h3>新增自訂模板</h3>
+                <p>透過網址或 Google Drive 上傳您的預約系統模板</p>
+                <div class="upload-options">
+                    <button class="upload-btn" onclick="openModal()">
+                        <span>+</span> 新增模板
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            © 2024 預約系統模板 · 為各行各業打造專業預約解決方案
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div class="modal" id="addTemplateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>新增模板</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="templateForm" onsubmit="addTemplate(event)">
+                <div class="form-group">
+                    <label for="category">產業分類</label>
+                    <select id="category" required>
+                        <option value="">請選擇分類</option>
+                        <option value="medical">醫療診所</option>
+                        <option value="beauty">美容美髮</option>
+                        <option value="restaurant">餐廳訂位</option>
+                        <option value="fitness">健身運動</option>
+                        <option value="education">教育培訓</option>
+                        <option value="consulting">專業服務</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="title">模板名稱</label>
+                    <input type="text" id="title" placeholder="例如：診所預約系統" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">模板描述</label>
+                    <textarea id="description" placeholder="簡短描述此模板的功能與特色" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>圖片來源</label>
+                    <div style="margin-bottom: 15px;">
+                        <input type="radio" name="imageSource" value="url" id="imageUrl" checked onchange="toggleImageInput()">
+                        <label for="imageUrl" style="display: inline; margin-left: 5px; font-weight: normal;">網址 URL</label>
+                        <input type="radio" name="imageSource" value="upload" id="imageUpload" onchange="toggleImageInput()" style="margin-left: 20px;">
+                        <label for="imageUpload" style="display: inline; margin-left: 5px; font-weight: normal;">上傳圖片</label>
+                    </div>
+                    
+                    <div id="urlInput">
+                        <input type="url" id="imageUrlInput" placeholder="https://example.com/image.jpg">
+                    </div>
+                    
+                    <div id="uploadInput" style="display: none;">
+                        <div class="image-upload-area" onclick="document.getElementById('fileInput').click()">
+                            <p>點擊或拖曳圖片至此處上傳</p>
+                            <p style="font-size: 13px; color: var(--text-light); margin-top: 10px;">支援 JPG、PNG 格式</p>
+                        </div>
+                        <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+                        <div id="imagePreview" style="margin-top: 15px;"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="templateUrl">模板連結</label>
+                    <input type="url" id="templateUrl" placeholder="https://your-template-url.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="driveUrl">Google Drive 連結（選填）</label>
+                    <input type="url" id="driveUrl" placeholder="https://drive.google.com/...">
+                </div>
+
+                <button type="submit" class="submit-btn">新增模板</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Initial templates data
+        const templates = [
+            {
+                id: 1,
+                category: 'medical',
+                categoryName: '醫療診所',
+                title: '診所預約系統',
+                description: '適合牙科、家醫科等診所使用，包含醫師排班、病歷管理、提醒通知等完整功能。',
+                image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&h=600&fit=crop',
+                url: '#',
+                driveUrl: ''
+            },
+            {
+                id: 2,
+                category: 'beauty',
+                categoryName: '美容美髮',
+                title: '美容沙龍預約',
+                description: '專為美容、美髮、美甲等產業設計，支援多位設計師、服務項目管理。',
+                image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&h=600&fit=crop',
+                url: '#',
+                driveUrl: ''
+            },
+            {
+                id: 3,
+                category: 'restaurant',
+                categoryName: '餐廳訂位',
+                title: '餐廳訂位系統',
+                description: '線上訂位、桌位管理、候位通知，提升餐廳營運效率與客戶體驗。',
+                image: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&h=600&fit=crop',
+                url: '#',
+                driveUrl: ''
+            },
+            {
+                id: 4,
+                category: 'fitness',
+                categoryName: '健身運動',
+                title: '健身房課程預約',
+                description: '團體課程、私人教練預約，會員管理與課程容量控制一應俱全。',
+                image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=600&fit=crop',
+                url: '#',
+                driveUrl: ''
+            },
+            {
+                id: 5,
+                category: 'education',
+                categoryName: '教育培訓',
+                title: '課程報名系統',
+                description: '適用於補習班、才藝班，支援線上報名、繳費、課程管理等功能。',
+                image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=600&fit=crop',
+                url: '#',
+                driveUrl: ''
+            },
+            {
+                id: 6,
+                category: 'consulting',
+                categoryName: '專業服務',
+                title: '顧問諮詢預約',
+                description: '法律、財務、心理諮詢等專業服務，提供安全的線上預約與視訊會議整合。',
+                image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=600&fit=crop',
+                url: '#',
+                driveUrl: ''
+            }
+        ];
+
+        // Render templates
+        function renderTemplates(filter = 'all') {
+            const grid = document.getElementById('templatesGrid');
+            const filteredTemplates = filter === 'all' 
+                ? templates 
+                : templates.filter(t => t.category === filter);
+
+            grid.innerHTML = filteredTemplates.map((template, index) => `
+                <article class="template-card" style="animation-delay: ${index * 0.1}s">
+                    <div class="template-image">
+                        <img src="${template.image}" alt="${template.title}">
+                    </div>
+                    <div class="template-content">
+                        <div class="template-category">${template.categoryName}</div>
+                        <h3 class="template-title">${template.title}</h3>
+                        <p class="template-description">${template.description}</p>
+                        <div class="template-actions">
+                            <a href="${template.url}" class="template-link" target="_blank">查看模板</a>
+                            ${template.driveUrl ? `<a href="${template.driveUrl}" class="template-link secondary" target="_blank">Drive</a>` : ''}
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+
+            // Trigger animation
+            setTimeout(() => {
+                document.querySelectorAll('.template-card').forEach(card => {
+                    card.classList.add('show');
+                });
+            }, 50);
+        }
+
+        // Filter functionality
+        const filterItems = document.querySelectorAll('.filter-item');
+        filterItems.forEach(item => {
+            item.addEventListener('click', function() {
+                filterItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                const category = this.getAttribute('data-category');
+                renderTemplates(category);
+            });
+        });
+
+        // Modal functions
+        function openModal() {
+            document.getElementById('addTemplateModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('addTemplateModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            document.getElementById('templateForm').reset();
+            document.getElementById('imagePreview').innerHTML = '';
+        }
+
+        // Toggle image input
+        function toggleImageInput() {
+            const urlChecked = document.getElementById('imageUrl').checked;
+            document.getElementById('urlInput').style.display = urlChecked ? 'block' : 'none';
+            document.getElementById('uploadInput').style.display = urlChecked ? 'none' : 'block';
+        }
+
+        // Handle file upload
+        let uploadedImageData = null;
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImageData = e.target.result;
+                    document.getElementById('imagePreview').innerHTML = `
+                        <img src="${e.target.result}" style="max-width: 100%; height: auto; border: 1px solid var(--border);">
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Drag and drop
+        const uploadArea = document.querySelector('.image-upload-area');
+        if (uploadArea) {
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    document.getElementById('fileInput').files = dataTransfer.files;
+                    handleFileSelect({ target: { files: [file] } });
+                }
+            });
+        }
+
+        // Add new template
+        function addTemplate(event) {
+            event.preventDefault();
+            
+            const category = document.getElementById('category').value;
+            const categoryNames = {
+                'medical': '醫療診所',
+                'beauty': '美容美髮',
+                'restaurant': '餐廳訂位',
+                'fitness': '健身運動',
+                'education': '教育培訓',
+                'consulting': '專業服務'
+            };
+
+            const imageSource = document.querySelector('input[name="imageSource"]:checked').value;
+            const imageUrl = imageSource === 'url' 
+                ? document.getElementById('imageUrlInput').value 
+                : uploadedImageData;
+
+            const newTemplate = {
+                id: templates.length + 1,
+                category: category,
+                categoryName: categoryNames[category],
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                image: imageUrl || 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=600&fit=crop',
+                url: document.getElementById('templateUrl').value,
+                driveUrl: document.getElementById('driveUrl').value
+            };
+
+            templates.push(newTemplate);
+            renderTemplates('all');
+            closeModal();
+
+            // Reset active filter
+            filterItems.forEach(i => i.classList.remove('active'));
+            filterItems[0].classList.add('active');
+        }
+
+        // Close modal on outside click
+        document.getElementById('addTemplateModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Initial render
+        renderTemplates();
+    </script>
+</body>
+</html>
