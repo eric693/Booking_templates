@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>健身房課程預約系統</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2C1810;
+            --accent: #D4704A;
+            --secondary: #8B6B47;
+            --background: #FAF8F5;
+            --card-bg: #FFFFFF;
+            --text: #1A1A1A;
+            --text-light: #6B6B6B;
+            --border: #E8E3DB;
+            --success: #4A8B6B;
+            --success-bg: #F0F7F4;
+            --warning: #B5820A;
+            --warning-bg: #FDF6E3;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* ── Header ── */
+        header {
+            padding: 60px 0 50px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 40px;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 8px;
+            animation: fadeInUp 0.8s ease-out 0.1s both;
+        }
+
+        .header-left h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 56px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--primary);
+            line-height: 1.1;
+            animation: fadeInUp 0.8s ease-out;
+            margin-bottom: 12px;
+        }
+
+        .header-desc {
+            font-size: 17px;
+            color: var(--text-light);
+            max-width: 500px;
+            line-height: 1.7;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            margin-top: 16px;
+        }
+
+        .gym-info-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 30px;
+            min-width: 260px;
+            animation: fadeInUp 0.8s ease-out 0.3s both;
+        }
+
+        .gym-info-card .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .gym-info-card .value {
+            font-size: 15px;
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 18px;
+        }
+
+        .gym-info-card .value:last-child { margin-bottom: 0; }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--success);
+            background: var(--success-bg);
+            padding: 4px 10px;
+            border-radius: 2px;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        /* ── Step Nav ── */
+        .step-nav {
+            padding: 40px 0 0;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .steps { display: flex; align-items: center; }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 600;
+            color: var(--text-light);
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-number  { background: var(--accent); border-color: var(--accent); color: white; }
+        .step.completed .step-number { background: var(--primary); border-color: var(--primary); color: white; }
+        .step-label { font-size: 14px; color: var(--text-light); font-weight: 500; }
+        .step.active .step-label { color: var(--primary); }
+
+        .step-connector {
+            flex: 0 0 60px;
+            height: 1px;
+            background: var(--border);
+            margin: 0 8px;
+        }
+
+        /* ── Tab Toggle ── */
+        .booking-tabs {
+            display: flex;
+            gap: 0;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            margin-bottom: 50px;
+            animation: fadeInUp 0.7s ease-out 0.1s both;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 18px 24px;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.04em;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            border-right: 1px solid var(--border);
+            position: relative;
+        }
+
+        .tab-btn:last-child { border-right: none; }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: var(--background);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: var(--background);
+            color: var(--primary);
+        }
+
+        .tab-sub {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 3px;
+            opacity: 0.7;
+        }
+
+        /* ── Main Layout ── */
+        .main-content {
+            padding: 60px 0 100px;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .section-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 32px; font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        /* ── Panel toggle ── */
+        .panel { display: none; }
+        .panel.active { display: block; }
+
+        /* ── Weekly Schedule (Group Classes) ── */
+        .week-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .week-label {
+            font-family: 'Crimson Pro', serif;
+            font-size: 22px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .week-controls { display: flex; gap: 8px; }
+
+        .nav-btn {
+            background: none;
+            border: 1px solid var(--border);
+            width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--primary);
+            font-size: 16px;
+        }
+
+        .nav-btn:hover { background: var(--primary); border-color: var(--primary); color: white; }
+
+        /* Day columns */
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 80px repeat(6, 1fr);
+            gap: 0;
+            border: 1px solid var(--border);
+            margin-bottom: 50px;
+            overflow: hidden;
+        }
+
+        .schedule-header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            padding: 12px 8px;
+            text-align: center;
+        }
+
+        .schedule-header:last-child { border-right: none; }
+
+        .schedule-header.time-col {
+            background: var(--background);
+        }
+
+        .day-name {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--primary);
+        }
+
+        .day-date {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 3px;
+        }
+
+        .day-date.today-date {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .time-slot-row {
+            display: contents;
+        }
+
+        .time-label {
+            background: var(--background);
+            border-bottom: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            padding: 8px;
+            font-size: 12px;
+            color: var(--text-light);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            min-height: 70px;
+        }
+
+        .schedule-cell {
+            border-bottom: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            padding: 5px;
+            min-height: 70px;
+            background: var(--card-bg);
+        }
+
+        .schedule-cell:last-child { border-right: none; }
+
+        .class-block {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--secondary);
+            padding: 8px 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            height: 100%;
+            min-height: 58px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .class-block:hover {
+            border-color: var(--accent);
+            border-left-color: var(--accent);
+            background: rgba(212, 112, 74, 0.04);
+            transform: translateX(2px);
+        }
+
+        .class-block.selected {
+            border-color: var(--accent);
+            border-left-color: var(--accent);
+            background: rgba(212, 112, 74, 0.06);
+        }
+
+        .class-block.full {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-left-color: var(--border);
+        }
+
+        .class-block.full:hover {
+            transform: none;
+            border-color: var(--border);
+            border-left-color: var(--border);
+            background: var(--background);
+        }
+
+        .class-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            line-height: 1.3;
+        }
+
+        .class-instructor {
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        .class-capacity {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 4px;
+        }
+
+        .capacity-bar-wrap {
+            flex: 1;
+            height: 3px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-right: 6px;
+            overflow: hidden;
+        }
+
+        .capacity-bar {
+            height: 100%;
+            border-radius: 2px;
+            background: var(--success);
+            transition: width 0.3s ease;
+        }
+
+        .capacity-bar.almost-full { background: var(--warning); }
+        .capacity-bar.full-bar { background: #C0392B; }
+
+        .capacity-text {
+            font-size: 10px;
+            color: var(--text-light);
+            white-space: nowrap;
+        }
+
+        .full-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #C0392B;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* ── Legend ── */
+        .schedule-legend {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .legend-dot {
+            width: 12px; height: 12px;
+            border-radius: 2px;
+        }
+
+        /* ── Private Trainer Panel ── */
+        .trainers-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .trainer-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .trainer-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(44, 24, 16, 0.06);
+        }
+
+        .trainer-card.selected {
+            border-color: var(--accent);
+            background: rgba(212, 112, 74, 0.03);
+        }
+
+        .trainer-card.selected::after {
+            content: 'selected';
+            position: absolute;
+            top: 12px; right: 12px;
+            background: var(--accent);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 3px 8px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .trainer-photo {
+            width: 100%;
+            height: 160px;
+            overflow: hidden;
+            background: var(--border);
+        }
+
+        .trainer-photo img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            object-position: top;
+            transition: transform 0.5s ease;
+        }
+
+        .trainer-card:hover .trainer-photo img { transform: scale(1.05); }
+
+        .trainer-info { padding: 20px; }
+
+        .trainer-name {
+            font-family: 'Crimson Pro', serif;
+            font-size: 20px; font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 3px;
+        }
+
+        .trainer-cert {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .trainer-meta {
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .trainer-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .tag {
+            font-size: 11px;
+            padding: 3px 8px;
+            background: var(--background);
+            border: 1px solid var(--border);
+            color: var(--text-light);
+        }
+
+        .trainer-rate {
+            font-family: 'Crimson Pro', serif;
+            font-size: 18px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* ── PT Session Selection ── */
+        .pt-sessions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 50px;
+        }
+
+        .session-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .session-item:hover { border-color: var(--secondary); }
+        .session-item.selected {
+            border-color: var(--accent);
+            background: rgba(212, 112, 74, 0.03);
+        }
+
+        .session-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .session-icon {
+            width: 40px; height: 40px;
+            background: var(--background);
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--secondary);
+            flex-shrink: 0;
+            font-family: 'Crimson Pro', serif;
+        }
+
+        .session-name { font-weight: 500; color: var(--primary); font-size: 15px; }
+        .session-desc { font-size: 13px; color: var(--text-light); margin-top: 2px; }
+
+        .session-right { text-align: right; }
+
+        .session-price {
+            font-family: 'Crimson Pro', serif;
+            font-size: 20px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .session-note {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        /* ── Calendar ── */
+        .calendar-section { margin-bottom: 30px; }
+
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .calendar-nav { display: flex; align-items: center; gap: 20px; }
+
+        .current-month {
+            font-family: 'Crimson Pro', serif;
+            font-size: 22px; color: var(--primary); font-weight: 600;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-size: 12px; font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 8px 0;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text);
+            position: relative;
+        }
+
+        .calendar-day:hover:not(.disabled):not(.other-month) {
+            border-color: var(--border);
+            background: var(--card-bg);
+        }
+
+        .calendar-day.has-slot::after {
+            content: '';
+            position: absolute;
+            bottom: 4px; left: 50%; transform: translateX(-50%);
+            width: 4px; height: 4px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .calendar-day.selected { background: var(--primary); color: white; border-color: var(--primary); }
+        .calendar-day.today { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+        .calendar-day.disabled, .calendar-day.other-month { color: var(--border); cursor: default; }
+
+        /* ── Time Slots ── */
+        .time-slots-section { margin-bottom: 50px; }
+
+        .time-period { margin-bottom: 24px; }
+
+        .time-period-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .time-slot {
+            padding: 10px;
+            text-align: center;
+            font-size: 13px; font-weight: 500;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--primary);
+            background: var(--card-bg);
+        }
+
+        .time-slot:hover:not(.booked) { border-color: var(--accent); color: var(--accent); }
+        .time-slot.selected { background: var(--primary); border-color: var(--primary); color: white; }
+        .time-slot.booked { background: var(--background); color: var(--border); cursor: not-allowed; text-decoration: line-through; }
+
+        /* ── Member Form ── */
+        .member-form { margin-bottom: 50px; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group.full { grid-column: 1 / -1; }
+
+        .form-group label {
+            font-size: 13px; font-weight: 500;
+            color: var(--primary);
+            letter-spacing: 0.03em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            background: var(--card-bg);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus { border-color: var(--accent); }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-group input::placeholder,
+        .form-group textarea::placeholder { color: var(--border); }
+
+        /* Member ID lookup */
+        .member-lookup {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .member-lookup input {
+            flex: 1;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            background: var(--card-bg);
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .member-lookup input:focus { border-color: var(--accent); }
+
+        .lookup-btn {
+            padding: 12px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-family: 'Work Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .lookup-btn:hover { background: var(--accent); }
+
+        .member-card {
+            background: var(--success-bg);
+            border: 1px solid #C8E3D8;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .member-card.show { display: block; }
+
+        .member-card-name {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .member-card-detail {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        /* ── Sidebar ── */
+        .sidebar { position: sticky; top: 30px; }
+
+        .summary-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 35px;
+            margin-bottom: 20px;
+        }
+
+        .summary-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 24px; color: var(--primary); font-weight: 600;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-type {
+            display: inline-block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--accent);
+            font-weight: 600;
+            border: 1px solid var(--accent);
+            padding: 3px 10px;
+            margin-bottom: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+            gap: 12px;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-light);
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .summary-value {
+            font-size: 14px; color: var(--primary); font-weight: 500;
+            text-align: right;
+        }
+
+        .summary-value.empty {
+            color: var(--border);
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .summary-divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary-total .label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-light); font-weight: 600;
+        }
+
+        .summary-total .price {
+            font-family: 'Crimson Pro', serif;
+            font-size: 28px; color: var(--primary); font-weight: 700;
+        }
+
+        .book-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--accent);
+            color: var(--background);
+            border: none;
+            font-size: 15px; font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .book-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(44, 24, 16, 0.15);
+        }
+
+        .notes-card {
+            background: var(--background);
+            border: 1px solid var(--border);
+            padding: 20px 24px;
+        }
+
+        .notes-card h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--primary); font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .notes-card ul { list-style: none; }
+
+        .notes-card ul li {
+            font-size: 13px; color: var(--text-light);
+            padding: 5px 0;
+            padding-left: 14px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .notes-card ul li::before { content: '–'; position: absolute; left: 0; color: var(--accent); }
+
+        /* ── Confirmation Modal ── */
+        .modal {
+            display: none;
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center; align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 60px 50px;
+            max-width: 520px; width: 90%;
+            animation: modalSlideIn 0.4s ease-out;
+            text-align: center;
+        }
+
+        .confirm-icon {
+            width: 70px; height: 70px;
+            border-radius: 50%;
+            background: var(--success-bg);
+            border: 2px solid #C8E3D8;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 28px;
+            font-family: 'Crimson Pro', serif;
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .modal-content h2 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 36px; color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .modal-content p {
+            color: var(--text-light);
+            font-size: 15px; line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        .confirm-details {
+            background: var(--background);
+            border: 1px solid var(--border);
+            padding: 20px 24px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .confirm-detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .confirm-detail-item:last-child { border-bottom: none; }
+        .confirm-detail-item .key { color: var(--text-light); }
+        .confirm-detail-item .val { color: var(--primary); font-weight: 500; }
+
+        .confirm-btn {
+            display: inline-block;
+            padding: 14px 40px;
+            background: var(--primary);
+            color: var(--background);
+            border: none;
+            font-size: 14px; font-weight: 600;
+            cursor: pointer;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .confirm-btn:hover { background: var(--accent); }
+
+        /* ── Footer ── */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 13px; font-weight: 500;
+            letter-spacing: 0.05em;
+            transition: color 0.3s ease;
+        }
+
+        .footer-back:hover { color: var(--accent); }
+
+        /* ── Animations ── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.4; }
+        }
+
+        .section-block { animation: fadeInUp 0.7s ease-out both; }
+        .section-block:nth-child(1) { animation-delay: 0.1s; }
+        .section-block:nth-child(2) { animation-delay: 0.2s; }
+        .section-block:nth-child(3) { animation-delay: 0.3s; }
+        .section-block:nth-child(4) { animation-delay: 0.4s; }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .main-content { grid-template-columns: 1fr; }
+            .sidebar { position: static; order: -1; }
+            .header-top { flex-direction: column; }
+            .trainers-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .step-connector { flex: 0 0 30px; }
+            .schedule-grid { grid-template-columns: 60px repeat(6, 1fr); font-size: 11px; }
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 0 20px; }
+            .header-left h1 { font-size: 40px; }
+            .time-grid { grid-template-columns: repeat(3, 1fr); }
+            .step-label { display: none; }
+            .schedule-grid { grid-template-columns: 50px repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="header-top">
+            <div class="header-left">
+                <div class="header-subtitle">健身運動 · 預約系統</div>
+                <h1>課程與教練<br>線上預約</h1>
+                <p class="header-desc">
+                    團體課程即時查詢名額、私人教練彈性預約，
+                    會員一站式管理您的訓練計畫。
+                </p>
+            </div>
+            <div class="gym-info-card">
+                <div class="label">場館名稱</div>
+                <div class="value">FORZA 體能訓練中心</div>
+                <div class="label">開放時間</div>
+                <div class="value">每日 06:00 – 23:00</div>
+                <div class="label">當前狀態</div>
+                <div class="value">
+                    <span class="status-badge">
+                        <span class="status-dot"></span>開放預約中
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-nav">
+            <div class="steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">選擇類型</div>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">選擇課程</div>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">選擇時間</div>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">會員資料</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="main-content">
+
+        <!-- Left Panel -->
+        <div class="left-panel">
+
+            <!-- Tab Toggle -->
+            <div class="booking-tabs section-block">
+                <button class="tab-btn active" onclick="switchTab('group', this)">
+                    團體課程
+                    <span class="tab-sub">Group Classes</span>
+                </button>
+                <button class="tab-btn" onclick="switchTab('pt', this)">
+                    私人教練
+                    <span class="tab-sub">Personal Training</span>
+                </button>
+            </div>
+
+            <!-- ── GROUP CLASS PANEL ── -->
+            <div class="panel active" id="panel-group">
+
+                <div class="section-block">
+                    <h2 class="section-title">本週課程表</h2>
+                    <p class="section-subtitle">點選課程即可預約，名額以實際系統為準</p>
+
+                    <div class="week-nav">
+                        <div class="week-label" id="weekLabel">2026 年 2 月 第 3 週</div>
+                        <div class="week-controls">
+                            <button class="nav-btn" onclick="changeWeek(-1)">‹</button>
+                            <button class="nav-btn" onclick="changeWeek(1)">›</button>
+                        </div>
+                    </div>
+
+                    <div class="schedule-grid" id="scheduleGrid">
+                        <!-- rendered by JS -->
+                    </div>
+
+                    <div class="schedule-legend">
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:var(--success);"></div>
+                            有空位
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:var(--warning);"></div>
+                            即將額滿
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:#C0392B;"></div>
+                            已額滿
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selected class detail -->
+                <div class="section-block" id="groupSelectedSection" style="display:none;">
+                    <h2 class="section-title">已選課程</h2>
+                    <p class="section-subtitle">確認以下課程資訊後填寫會員資料</p>
+                    <div class="summary-card" style="margin-bottom:0;">
+                        <div id="groupClassDetail" style="font-size:15px;color:var(--primary);line-height:2;"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ── PERSONAL TRAINING PANEL ── -->
+            <div class="panel" id="panel-pt">
+
+                <div class="section-block">
+                    <h2 class="section-title">選擇教練</h2>
+                    <p class="section-subtitle">請選擇您希望合作的私人教練</p>
+                    <div class="trainers-grid">
+                        <div class="trainer-card selected" onclick="selectTrainer(this,'陳志豪 教練','NASM-CPT · 體能強化',1800)">
+                            <div class="trainer-photo">
+                                <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=300&fit=crop&crop=top" alt="陳志豪">
+                            </div>
+                            <div class="trainer-info">
+                                <div class="trainer-name">陳志豪</div>
+                                <div class="trainer-cert">NASM-CPT 認證</div>
+                                <div class="trainer-meta">資歷 7 年 · 專精功能性訓練<br>體能強化與運動傷害預防</div>
+                                <div class="trainer-tags">
+                                    <span class="tag">重量訓練</span>
+                                    <span class="tag">功能性訓練</span>
+                                    <span class="tag">體態雕塑</span>
+                                </div>
+                                <div class="trainer-rate">NT$1,800 / 堂</div>
+                            </div>
+                        </div>
+
+                        <div class="trainer-card" onclick="selectTrainer(this,'林美慧 教練','ACE-CPT · 有氧塑形',1600)">
+                            <div class="trainer-photo">
+                                <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&h=300&fit=crop&crop=top" alt="林美慧">
+                            </div>
+                            <div class="trainer-info">
+                                <div class="trainer-name">林美慧</div>
+                                <div class="trainer-cert">ACE-CPT 認證</div>
+                                <div class="trainer-meta">資歷 5 年 · 有氧體能訓練<br>瑜伽融合、核心強化</div>
+                                <div class="trainer-tags">
+                                    <span class="tag">有氧訓練</span>
+                                    <span class="tag">核心訓練</span>
+                                    <span class="tag">瑜伽融合</span>
+                                </div>
+                                <div class="trainer-rate">NT$1,600 / 堂</div>
+                            </div>
+                        </div>
+
+                        <div class="trainer-card" onclick="selectTrainer(this,'王俊傑 教練','CSCS · 競技體能',2200)">
+                            <div class="trainer-photo">
+                                <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400&h=300&fit=crop&crop=top" alt="王俊傑">
+                            </div>
+                            <div class="trainer-info">
+                                <div class="trainer-name">王俊傑</div>
+                                <div class="trainer-cert">CSCS 認證</div>
+                                <div class="trainer-meta">資歷 10 年 · 競技運動訓練<br>舉重、爆發力強化</div>
+                                <div class="trainer-tags">
+                                    <span class="tag">競技訓練</span>
+                                    <span class="tag">舉重</span>
+                                    <span class="tag">爆發力</span>
+                                </div>
+                                <div class="trainer-rate">NT$2,200 / 堂</div>
+                            </div>
+                        </div>
+
+                        <div class="trainer-card" onclick="selectTrainer(this,'張雅婷 教練','RYT-200 · 伸展復健',1500)">
+                            <div class="trainer-photo">
+                                <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=300&fit=crop&crop=top" alt="張雅婷">
+                            </div>
+                            <div class="trainer-info">
+                                <div class="trainer-name">張雅婷</div>
+                                <div class="trainer-cert">RYT-200 認證</div>
+                                <div class="trainer-meta">資歷 6 年 · 瑜伽與伸展<br>銀髮族體能、復健訓練</div>
+                                <div class="trainer-tags">
+                                    <span class="tag">瑜伽</span>
+                                    <span class="tag">伸展</span>
+                                    <span class="tag">復健訓練</span>
+                                </div>
+                                <div class="trainer-rate">NT$1,500 / 堂</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-block">
+                    <h2 class="section-title">選擇課程方案</h2>
+                    <p class="section-subtitle">請選擇本次私人教練的課程方案</p>
+                    <div class="pt-sessions" id="ptSessions">
+                        <div class="session-item selected" onclick="selectPTSession(this,'單堂體驗',60,1800)">
+                            <div class="session-left">
+                                <div class="session-icon">1×</div>
+                                <div>
+                                    <div class="session-name">單堂體驗</div>
+                                    <div class="session-desc">60 分鐘 · 初次評估 + 訓練</div>
+                                </div>
+                            </div>
+                            <div class="session-right">
+                                <div class="session-price" id="ptPrice">NT$1,800</div>
+                                <div class="session-note">依教練計費</div>
+                            </div>
+                        </div>
+                        <div class="session-item" onclick="selectPTSession(this,'課程包 8 堂',480,13000)">
+                            <div class="session-left">
+                                <div class="session-icon">8×</div>
+                                <div>
+                                    <div class="session-name">課程包 8 堂</div>
+                                    <div class="session-desc">每堂 60 分鐘 · 有效期 3 個月</div>
+                                </div>
+                            </div>
+                            <div class="session-right">
+                                <div class="session-price">NT$13,000</div>
+                                <div class="session-note">折合 NT$1,625/堂</div>
+                            </div>
+                        </div>
+                        <div class="session-item" onclick="selectPTSession(this,'課程包 16 堂',960,24000)">
+                            <div class="session-left">
+                                <div class="session-icon">16×</div>
+                                <div>
+                                    <div class="session-name">課程包 16 堂</div>
+                                    <div class="session-desc">每堂 60 分鐘 · 有效期 6 個月</div>
+                                </div>
+                            </div>
+                            <div class="session-right">
+                                <div class="session-price">NT$24,000</div>
+                                <div class="session-note">折合 NT$1,500/堂</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PT Calendar & Time -->
+                <div class="section-block">
+                    <h2 class="section-title">選擇上課時間</h2>
+                    <p class="section-subtitle">請選擇方便的日期與時段</p>
+
+                    <div class="calendar-section">
+                        <div class="calendar-header">
+                            <div class="calendar-nav">
+                                <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
+                                <div class="current-month" id="currentMonth"></div>
+                                <button class="nav-btn" onclick="changeMonth(1)">›</button>
+                            </div>
+                        </div>
+                        <div class="calendar-grid" id="calendarGrid"></div>
+                    </div>
+
+                    <div class="time-slots-section" id="timeSlotsSection" style="display:none;">
+                        <p class="section-subtitle" id="selectedDateLabel"></p>
+                        <div class="time-period">
+                            <div class="time-period-label">早晨 Morning</div>
+                            <div class="time-grid">
+                                <div class="time-slot" onclick="selectTime(this,'06:00')">06:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'07:00')">07:00</div>
+                                <div class="time-slot booked">08:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'09:00')">09:00</div>
+                            </div>
+                        </div>
+                        <div class="time-period">
+                            <div class="time-period-label">上午 Late Morning</div>
+                            <div class="time-grid">
+                                <div class="time-slot" onclick="selectTime(this,'10:00')">10:00</div>
+                                <div class="time-slot booked">11:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'12:00')">12:00</div>
+                            </div>
+                        </div>
+                        <div class="time-period">
+                            <div class="time-period-label">下午 Afternoon</div>
+                            <div class="time-grid">
+                                <div class="time-slot" onclick="selectTime(this,'13:00')">13:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'14:00')">14:00</div>
+                                <div class="time-slot booked">15:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'16:00')">16:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'17:00')">17:00</div>
+                                <div class="time-slot booked">18:00</div>
+                            </div>
+                        </div>
+                        <div class="time-period">
+                            <div class="time-period-label">晚間 Evening</div>
+                            <div class="time-grid">
+                                <div class="time-slot" onclick="selectTime(this,'19:00')">19:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'20:00')">20:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'21:00')">21:00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /panel-pt -->
+
+            <!-- Step 4: Member Info (shared) -->
+            <div class="section-block">
+                <h2 class="section-title">會員資料</h2>
+                <p class="section-subtitle">請輸入會員編號快速帶入資料，或直接填寫</p>
+
+                <div class="member-lookup">
+                    <input type="text" id="memberIdInput" placeholder="輸入會員編號（如 M001234）">
+                    <button class="lookup-btn" onclick="lookupMember()">查詢</button>
+                </div>
+
+                <div class="member-card" id="memberCard">
+                    <div class="member-card-name" id="memberCardName"></div>
+                    <div class="member-card-detail" id="memberCardDetail"></div>
+                </div>
+
+                <div class="member-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>姓名 *</label>
+                            <input type="text" placeholder="請輸入姓名" id="memberName" oninput="updateSummary()">
+                        </div>
+                        <div class="form-group">
+                            <label>手機號碼 *</label>
+                            <input type="tel" placeholder="0912-345-678" id="memberPhone" oninput="updateSummary()">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>電子信箱</label>
+                            <input type="email" placeholder="example@mail.com">
+                        </div>
+                        <div class="form-group">
+                            <label>會員等級</label>
+                            <select id="memberLevel">
+                                <option value="">請選擇</option>
+                                <option>一般會員</option>
+                                <option>黃金會員</option>
+                                <option>白金會員</option>
+                                <option>非會員（散客）</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full">
+                            <label>健康狀況或特殊需求</label>
+                            <textarea placeholder="請告知任何健康狀況、舊傷、訓練目標或希望教練注意的事項…"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /left-panel -->
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="summary-card">
+                <div class="summary-title">預約摘要</div>
+                <div class="summary-type" id="sum-type">團體課程</div>
+
+                <div class="summary-item">
+                    <div class="summary-label">課程 / 教練</div>
+                    <div class="summary-value empty" id="sum-course">請選擇課程</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">方案</div>
+                    <div class="summary-value empty" id="sum-plan">–</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">日期</div>
+                    <div class="summary-value empty" id="sum-date">請選擇日期</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">時間</div>
+                    <div class="summary-value empty" id="sum-time">請選擇時間</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">會員</div>
+                    <div class="summary-value empty" id="sum-member">請填寫資料</div>
+                </div>
+
+                <div class="summary-divider"></div>
+
+                <div class="summary-total">
+                    <div class="label">費用</div>
+                    <div class="price" id="sum-price">–</div>
+                </div>
+            </div>
+
+            <button class="book-btn" onclick="submitBooking()">確認預約</button>
+
+            <div style="height: 20px;"></div>
+
+            <div class="notes-card">
+                <h4>注意事項</h4>
+                <ul>
+                    <li>團體課程請提前 10 分鐘入場</li>
+                    <li>私人教練課請提前 5 分鐘到場準備</li>
+                    <li>取消或更改請提前 2 小時通知</li>
+                    <li>課程包票券不可轉讓他人使用</li>
+                    <li>請著運動服裝及運動鞋入場</li>
+                    <li>場館提供置物櫃，貴重物品請自行保管</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <div class="footer-inner">
+            <a href="booking-templates.html" class="footer-back">← 返回模板列表</a>
+            <span>© 2024 健身房課程預約系統 · 健身運動模板</span>
+        </div>
+    </div>
+</footer>
+
+<!-- Confirmation Modal -->
+<div class="modal" id="confirmModal">
+    <div class="modal-content">
+        <div class="confirm-icon">OK</div>
+        <h2>預約成功！</h2>
+        <p>您的課程預約已確認，<br>我們將以簡訊傳送預約提醒。</p>
+        <div class="confirm-details" id="confirmDetails"></div>
+        <button class="confirm-btn" onclick="closeConfirm()">完成</button>
+    </div>
+</div>
+
+<script>
+    // ─── State ───────────────────────────────────────────────
+    const state = {
+        mode: 'group', // 'group' | 'pt'
+        course: null,
+        plan: '–',
+        price: 0,
+        trainer: '陳志豪 教練',
+        trainerCert: 'NASM-CPT · 體能強化',
+        ptSession: '單堂體驗',
+        ptPrice: 1800,
+        date: null,
+        time: null,
+        member: null,
+        // group class selected
+        groupClass: null
+    };
+
+    // ─── Tab Switch ──────────────────────────────────────────
+    function switchTab(mode, btn) {
+        state.mode = mode;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('panel-' + mode).classList.add('active');
+
+        document.getElementById('sum-type').textContent = mode === 'group' ? '團體課程' : '私人教練';
+        document.getElementById('sum-course').textContent = '請選擇課程';
+        document.getElementById('sum-course').className = 'summary-value empty';
+        document.getElementById('sum-plan').textContent = '–';
+        document.getElementById('sum-plan').className = 'summary-value empty';
+        document.getElementById('sum-price').textContent = '–';
+        document.getElementById('sum-date').textContent = '請選擇日期';
+        document.getElementById('sum-date').className = 'summary-value empty';
+        document.getElementById('sum-time').textContent = '請選擇時間';
+        document.getElementById('sum-time').className = 'summary-value empty';
+        updateStepIndicator(1);
+    }
+
+    // ─── Weekly Schedule ─────────────────────────────────────
+    const classes = [
+        { name: '瑜伽初級', instructor: '張雅婷', day: 1, time: '07:00', duration: 60, capacity: 20, booked: 8 },
+        { name: 'HIIT 燃脂', instructor: '陳志豪', day: 1, time: '09:00', duration: 45, capacity: 25, booked: 25 },
+        { name: '飛輪有氧', instructor: '林美慧', day: 1, time: '18:30', duration: 50, capacity: 20, booked: 17 },
+        { name: '重訓入門', instructor: '王俊傑', day: 2, time: '07:00', duration: 60, capacity: 15, booked: 6 },
+        { name: '核心訓練', instructor: '林美慧', day: 2, time: '12:00', duration: 45, capacity: 20, booked: 18 },
+        { name: 'TRX 懸吊', instructor: '陳志豪', day: 2, time: '19:00', duration: 60, capacity: 15, booked: 10 },
+        { name: '芭蕾塑形', instructor: '張雅婷', day: 3, time: '09:00', duration: 60, capacity: 20, booked: 12 },
+        { name: '拳擊有氧', instructor: '王俊傑', day: 3, time: '18:00', duration: 60, capacity: 20, booked: 20 },
+        { name: '瑜伽進階', instructor: '張雅婷', day: 4, time: '07:30', duration: 75, capacity: 15, booked: 7 },
+        { name: 'HIIT 燃脂', instructor: '陳志豪', day: 4, time: '12:00', duration: 45, capacity: 25, booked: 14 },
+        { name: '飛輪有氧', instructor: '林美慧', day: 5, time: '07:00', duration: 50, capacity: 20, booked: 20 },
+        { name: '功能性訓練', instructor: '陳志豪', day: 5, time: '18:30', duration: 60, capacity: 15, booked: 9 },
+        { name: '全身伸展', instructor: '張雅婷', day: 6, time: '09:00', duration: 60, capacity: 25, booked: 5 },
+        { name: '有氧舞蹈', instructor: '林美慧', day: 6, time: '11:00', duration: 60, capacity: 30, booked: 22 },
+        { name: '核心訓練', instructor: '林美慧', day: 6, time: '15:00', duration: 45, capacity: 20, booked: 19 },
+    ];
+
+    const timeSlots = ['07:00', '09:00', '11:00', '12:00', '15:00', '18:00', '19:00'];
+    const dayNames  = ['一', '二', '三', '四', '五', '六'];
+
+    let weekOffset = 0;
+
+    function getWeekDates(offset) {
+        const today = new Date();
+        const mon = new Date(today);
+        mon.setDate(today.getDate() - today.getDay() + 1 + offset * 7);
+        return Array.from({ length: 6 }, (_, i) => {
+            const d = new Date(mon);
+            d.setDate(mon.getDate() + i);
+            return d;
+        });
+    }
+
+    function renderSchedule() {
+        const dates = getWeekDates(weekOffset);
+        const grid = document.getElementById('scheduleGrid');
+
+        // Update week label
+        const y = dates[0].getFullYear();
+        const m = dates[0].getMonth() + 1;
+        document.getElementById('weekLabel').textContent = `${y} 年 ${m} 月`;
+
+        let html = `<div class="schedule-header time-col"></div>`;
+        dates.forEach((d, i) => {
+            const isToday = d.toDateString() === new Date().toDateString();
+            html += `<div class="schedule-header">
+                <div class="day-name">週${dayNames[i]}</div>
+                <div class="day-date ${isToday ? 'today-date' : ''}">${d.getMonth()+1}/${d.getDate()}</div>
+            </div>`;
+        });
+
+        timeSlots.forEach(t => {
+            html += `<div class="time-label">${t}</div>`;
+            for (let day = 1; day <= 6; day++) {
+                const cls = classes.find(c => c.day === day && c.time === t);
+                if (cls) {
+                    const pct = cls.booked / cls.capacity;
+                    const barClass = pct >= 1 ? 'full-bar' : pct >= 0.8 ? 'almost-full' : '';
+                    const isFull = pct >= 1;
+                    html += `<div class="schedule-cell">
+                        <div class="class-block ${isFull ? 'full' : ''}" 
+                             onclick="${isFull ? '' : `selectGroupClass(this,'${cls.name}','${cls.instructor}','${t}',${cls.capacity},${cls.booked})`}">
+                            <div>
+                                <div class="class-name">${cls.name}</div>
+                                <div class="class-instructor">${cls.instructor}</div>
+                            </div>
+                            <div class="class-capacity">
+                                ${isFull
+                                    ? `<span class="full-label">額滿</span>`
+                                    : `<div class="capacity-bar-wrap"><div class="capacity-bar ${barClass}" style="width:${pct*100}%"></div></div>
+                                       <span class="capacity-text">${cls.booked}/${cls.capacity}</span>`
+                                }
+                            </div>
+                        </div>
+                    </div>`;
+                } else {
+                    html += `<div class="schedule-cell"></div>`;
+                }
+            }
+        });
+
+        grid.innerHTML = html;
+    }
+
+    function changeWeek(dir) {
+        weekOffset += dir;
+        renderSchedule();
+    }
+
+    function selectGroupClass(el, name, instructor, time, capacity, booked) {
+        document.querySelectorAll('.class-block:not(.full)').forEach(b => b.classList.remove('selected'));
+        el.classList.add('selected');
+        state.groupClass = { name, instructor, time };
+        state.course = name;
+        state.plan = `${instructor} 指導`;
+        state.price = 0;
+
+        document.getElementById('groupSelectedSection').style.display = 'block';
+        document.getElementById('groupClassDetail').innerHTML =
+            `<strong>${name}</strong><br>` +
+            `指導教練：${instructor}<br>` +
+            `課程時間：${time}<br>` +
+            `名額：${booked}/${capacity}`;
+
+        document.getElementById('sum-course').textContent = name;
+        document.getElementById('sum-course').classList.remove('empty');
+        document.getElementById('sum-plan').textContent = instructor + ' 指導';
+        document.getElementById('sum-plan').classList.remove('empty');
+        document.getElementById('sum-price').textContent = '會員免費';
+        document.getElementById('sum-time').textContent = time;
+        document.getElementById('sum-time').classList.remove('empty');
+        updateStepIndicator(2);
+    }
+
+    // ─── Trainer ────────────────────────────────────────────
+    function selectTrainer(el, name, cert, rate) {
+        document.querySelectorAll('.trainer-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        state.trainer = name;
+        state.trainerCert = cert;
+        state.ptPrice = rate;
+
+        document.getElementById('sum-course').textContent = name;
+        document.getElementById('sum-course').classList.remove('empty');
+
+        // update PT session prices based on trainer rate
+        updatePTPrices(rate);
+        updateStepIndicator(1);
+    }
+
+    function updatePTPrices(baseRate) {
+        const packages = [
+            { mult: 1, price: baseRate },
+            { mult: 8, price: Math.round(baseRate * 8 * 0.9 / 100) * 100 },
+            { mult: 16, price: Math.round(baseRate * 16 * 0.83 / 100) * 100 }
+        ];
+        document.querySelectorAll('.pt-sessions .session-item').forEach((item, i) => {
+            const priceEl = item.querySelector('.session-price');
+            if (priceEl && packages[i]) {
+                priceEl.textContent = 'NT$' + packages[i].price.toLocaleString();
+            }
+        });
+    }
+
+    // ─── PT Session ──────────────────────────────────────────
+    function selectPTSession(el, name, mins, price) {
+        document.querySelectorAll('.session-item').forEach(s => s.classList.remove('selected'));
+        el.classList.add('selected');
+        state.ptSession = name;
+        state.price = price;
+        document.getElementById('sum-plan').textContent = name;
+        document.getElementById('sum-plan').classList.remove('empty');
+        document.getElementById('sum-price').textContent = 'NT$' + price.toLocaleString();
+        updateStepIndicator(2);
+    }
+
+    // ─── Calendar ────────────────────────────────────────────
+    let currentDate = new Date();
+    const months = ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+    const days = ['日','一','二','三','四','五','六'];
+
+    function renderCalendar() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        document.getElementById('currentMonth').textContent = `${year} 年 ${months[month]}`;
+
+        const grid = document.getElementById('calendarGrid');
+        const today = new Date();
+        let html = days.map(d => `<div class="calendar-day-header">${d}</div>`).join('');
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const prevDays = new Date(year, month, 0).getDate();
+
+        for (let i = firstDay - 1; i >= 0; i--)
+            html += `<div class="calendar-day other-month">${prevDays - i}</div>`;
+
+        const slotDays = [3,4,5,6,7,10,11,12,13,14,17,18,19,20,21,24,25,26,27,28];
+
+        for (let d = 1; d <= daysInMonth; d++) {
+            const date = new Date(year, month, d);
+            const isToday = date.toDateString() === today.toDateString();
+            const isPast = date < today && !isToday;
+            const hasSlot = slotDays.includes(d) && !isPast;
+            const classes = ['calendar-day', isToday?'today':'', isPast?'disabled':'', hasSlot?'has-slot':''].filter(Boolean).join(' ');
+            const onclick = !isPast ? `onclick="selectDate(this,${year},${month},${d})"` : '';
+            html += `<div class="${classes}" ${onclick}>${d}</div>`;
+        }
+
+        const rem = (7 - (firstDay + daysInMonth) % 7) % 7;
+        for (let d = 1; d <= rem; d++)
+            html += `<div class="calendar-day other-month">${d}</div>`;
+
+        grid.innerHTML = html;
+    }
+
+    function changeMonth(dir) {
+        currentDate.setMonth(currentDate.getMonth() + dir);
+        renderCalendar();
+    }
+
+    function selectDate(el, year, month, day) {
+        document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+        el.classList.add('selected');
+        const d = new Date(year, month, day);
+        state.date = `${year}/${String(month+1).padStart(2,'0')}/${String(day).padStart(2,'0')}`;
+        const weekdays = ['日','一','二','三','四','五','六'];
+        document.getElementById('sum-date').textContent = state.date + ' 週' + weekdays[d.getDay()];
+        document.getElementById('sum-date').classList.remove('empty');
+        document.getElementById('selectedDateLabel').textContent = `${state.date} 週${weekdays[d.getDay()]} 可預約時段`;
+        document.getElementById('timeSlotsSection').style.display = 'block';
+        updateStepIndicator(3);
+        document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+        state.time = null;
+        document.getElementById('sum-time').textContent = '請選擇時間';
+        document.getElementById('sum-time').className = 'summary-value empty';
+    }
+
+    // ─── Time ────────────────────────────────────────────────
+    function selectTime(el, time) {
+        document.querySelectorAll('.time-slot:not(.booked)').forEach(s => s.classList.remove('selected'));
+        el.classList.add('selected');
+        state.time = time;
+        document.getElementById('sum-time').textContent = time;
+        document.getElementById('sum-time').classList.remove('empty');
+    }
+
+    // ─── Member lookup (demo) ────────────────────────────────
+    const demoMembers = {
+        'M001234': { name: '王大明', level: '黃金會員', phone: '0912-345-678', sessions: 12 },
+        'M005678': { name: '李小華', level: '白金會員', phone: '0923-456-789', sessions: 28 },
+    };
+
+    function lookupMember() {
+        const id = document.getElementById('memberIdInput').value.trim().toUpperCase();
+        const card = document.getElementById('memberCard');
+        if (demoMembers[id]) {
+            const m = demoMembers[id];
+            document.getElementById('memberCardName').textContent = m.name + '（' + id + '）';
+            document.getElementById('memberCardDetail').textContent = m.level + ' · ' + m.phone + ' · 剩餘堂數：' + m.sessions + ' 堂';
+            document.getElementById('memberName').value = m.name;
+            document.getElementById('memberPhone').value = m.phone;
+            card.classList.add('show');
+            updateSummary();
+        } else {
+            card.classList.remove('show');
+            alert('查無此會員編號，請確認後重試');
+        }
+    }
+
+    // ─── Summary ─────────────────────────────────────────────
+    function updateSummary() {
+        const name = document.getElementById('memberName').value;
+        const phone = document.getElementById('memberPhone').value;
+        if (name) {
+            document.getElementById('sum-member').textContent = name + (phone ? ` · ${phone}` : '');
+            document.getElementById('sum-member').classList.remove('empty');
+            updateStepIndicator(4);
+        }
+    }
+
+    // ─── Step Indicator ──────────────────────────────────────
+    function updateStepIndicator(upTo) {
+        document.querySelectorAll('.step').forEach((s, i) => {
+            s.classList.remove('active', 'completed');
+            if (i < upTo - 1) s.classList.add('completed');
+            else if (i === upTo - 1) s.classList.add('active');
+        });
+    }
+
+    // ─── Submit ──────────────────────────────────────────────
+    function submitBooking() {
+        const name = document.getElementById('memberName').value;
+        const isGroup = state.mode === 'group';
+        const courseOK = isGroup ? !!state.groupClass : !!state.ptSession;
+
+        if (isGroup) {
+            if (!state.groupClass || !name) {
+                alert('請選擇課程並填寫會員姓名');
+                return;
+            }
+        } else {
+            if (!state.date || !state.time || !name) {
+                alert('請完整填寫預約資訊（日期、時間、姓名）');
+                return;
+            }
+        }
+
+        const rows = isGroup
+            ? [
+                ['課程', state.groupClass.name],
+                ['指導', state.groupClass.instructor],
+                ['時間', state.groupClass.time],
+                ['會員', name],
+                ['費用', '會員免費']
+              ]
+            : [
+                ['教練', state.trainer],
+                ['方案', state.ptSession],
+                ['日期', state.date],
+                ['時間', state.time],
+                ['會員', name],
+                ['費用', document.getElementById('sum-price').textContent]
+              ];
+
+        document.getElementById('confirmDetails').innerHTML = rows
+            .map(([k,v]) => `<div class="confirm-detail-item"><span class="key">${k}</span><span class="val">${v}</span></div>`)
+            .join('');
+        document.getElementById('confirmModal').classList.add('active');
+    }
+
+    function closeConfirm() {
+        document.getElementById('confirmModal').classList.remove('active');
+    }
+
+    document.getElementById('confirmModal').addEventListener('click', function(e) {
+        if (e.target === this) closeConfirm();
+    });
+
+    // ─── Init ────────────────────────────────────────────────
+    renderSchedule();
+    renderCalendar();
+</script>
+</body>
+</html>

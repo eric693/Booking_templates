@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>課程報名系統</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2C1810;
+            --accent: #D4704A;
+            --secondary: #8B6B47;
+            --background: #FAF8F5;
+            --card-bg: #FFFFFF;
+            --text: #1A1A1A;
+            --text-light: #6B6B6B;
+            --border: #E8E3DB;
+            --success: #4A8B6B;
+            --success-bg: #F0F7F4;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* ── Header ── */
+        header {
+            padding: 60px 0 50px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 40px;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 8px;
+            animation: fadeInUp 0.8s ease-out 0.1s both;
+        }
+
+        .header-left h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 56px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--primary);
+            line-height: 1.1;
+            animation: fadeInUp 0.8s ease-out;
+            margin-bottom: 12px;
+        }
+
+        .header-desc {
+            font-size: 17px;
+            color: var(--text-light);
+            max-width: 500px;
+            line-height: 1.7;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            margin-top: 16px;
+        }
+
+        .school-info-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 30px;
+            min-width: 260px;
+            animation: fadeInUp 0.8s ease-out 0.3s both;
+        }
+
+        .school-info-card .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .school-info-card .value {
+            font-size: 15px;
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 18px;
+        }
+
+        .school-info-card .value:last-child { margin-bottom: 0; }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--success);
+            background: var(--success-bg);
+            padding: 4px 10px;
+            border-radius: 2px;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        /* ── Step Nav ── */
+        .step-nav {
+            padding: 40px 0 0;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .steps { display: flex; align-items: center; }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 600;
+            color: var(--text-light);
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-number  { background: var(--accent); border-color: var(--accent); color: white; }
+        .step.completed .step-number { background: var(--primary); border-color: var(--primary); color: white; }
+        .step-label { font-size: 14px; color: var(--text-light); font-weight: 500; }
+        .step.active .step-label { color: var(--primary); }
+
+        .step-connector {
+            flex: 0 0 60px;
+            height: 1px;
+            background: var(--border);
+            margin: 0 8px;
+        }
+
+        /* ── Main Layout ── */
+        .main-content {
+            padding: 60px 0 100px;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .section-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 32px; font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .section-block {
+            margin-bottom: 50px;
+            animation: fadeInUp 0.7s ease-out both;
+        }
+
+        .section-block:nth-child(1) { animation-delay: 0.1s; }
+        .section-block:nth-child(2) { animation-delay: 0.2s; }
+        .section-block:nth-child(3) { animation-delay: 0.3s; }
+        .section-block:nth-child(4) { animation-delay: 0.4s; }
+        .section-block:nth-child(5) { animation-delay: 0.5s; }
+
+        /* ── Category Filter ── */
+        .category-filter {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .cat-btn {
+            font-size: 13px;
+            padding: 7px 18px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.03em;
+        }
+
+        .cat-btn.active, .cat-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* ── Course Cards ── */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .course-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .course-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(44, 24, 16, 0.06);
+        }
+
+        .course-card.selected {
+            border-color: var(--accent);
+            background: rgba(212, 112, 74, 0.03);
+        }
+
+        .course-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 12px; right: 12px;
+            width: 22px; height: 22px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700;
+        }
+
+        .course-card.full {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .course-card.full:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: var(--border);
+        }
+
+        .course-header {
+            padding: 20px 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .course-category-tag {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--accent);
+            font-weight: 600;
+            background: rgba(212, 112, 74, 0.08);
+            padding: 3px 8px;
+            border: 1px solid rgba(212, 112, 74, 0.2);
+        }
+
+        .course-status {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+        }
+
+        .course-status.open {
+            color: var(--success);
+            background: var(--success-bg);
+        }
+
+        .course-status.almost {
+            color: #8B6B00;
+            background: #FFF9E6;
+        }
+
+        .course-status.full-tag {
+            color: var(--text-light);
+            background: var(--background);
+        }
+
+        .course-body { padding: 14px 20px 20px; }
+
+        .course-name {
+            font-family: 'Crimson Pro', serif;
+            font-size: 20px; font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .course-teacher {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--secondary);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .course-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 14px;
+        }
+
+        .course-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .meta-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-light);
+            font-weight: 600;
+            min-width: 40px;
+        }
+
+        .capacity-bar {
+            height: 3px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 2px;
+        }
+
+        .capacity-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        .capacity-fill.almost { background: #D4A017; }
+        .capacity-fill.full-bar { background: var(--text-light); }
+
+        .capacity-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        .course-price {
+            font-family: 'Crimson Pro', serif;
+            font-size: 22px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .course-price-note {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 1px;
+        }
+
+        /* ── Trial / Package Toggle ── */
+        .type-toggle {
+            display: flex;
+            gap: 0;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            margin-bottom: 30px;
+            width: fit-content;
+        }
+
+        .toggle-btn {
+            padding: 10px 24px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            background: none;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.03em;
+        }
+
+        .toggle-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ── Plan Cards ── */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .plan-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .plan-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .plan-card.selected {
+            border-color: var(--accent);
+            background: rgba(212, 112, 74, 0.03);
+        }
+
+        .plan-card.recommended::before {
+            content: '推薦';
+            position: absolute;
+            top: -1px; left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 12px;
+            letter-spacing: 0.08em;
+        }
+
+        .plan-name {
+            font-family: 'Crimson Pro', serif;
+            font-size: 18px; font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .plan-desc {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+
+        .plan-price {
+            font-family: 'Crimson Pro', serif;
+            font-size: 26px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .plan-unit {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        .plan-per-lesson {
+            font-size: 11px;
+            color: var(--accent);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        /* ── Schedule Selection ── */
+        .schedule-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .schedule-item:hover { border-color: var(--secondary); }
+
+        .schedule-item.selected {
+            border-color: var(--accent);
+            background: rgba(212, 112, 74, 0.03);
+        }
+
+        .schedule-item.unavailable {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .schedule-item.unavailable:hover { border-color: var(--border); }
+
+        .schedule-left { display: flex; align-items: center; gap: 16px; }
+
+        .schedule-day {
+            font-family: 'Crimson Pro', serif;
+            font-size: 22px; font-weight: 700;
+            color: var(--primary);
+            min-width: 44px;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .schedule-day span {
+            display: block;
+            font-size: 11px;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 500;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 2px;
+        }
+
+        .schedule-divider {
+            width: 1px; height: 36px;
+            background: var(--border);
+        }
+
+        .schedule-info {}
+
+        .schedule-time {
+            font-size: 15px; font-weight: 600;
+            color: var(--primary);
+        }
+
+        .schedule-room {
+            font-size: 12px; color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        .schedule-right { text-align: right; }
+
+        .schedule-spots {
+            font-size: 13px;
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .schedule-spots.few { color: var(--accent); }
+        .schedule-spots.none { color: var(--text-light); }
+
+        /* ── Student Form ── */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group.full { grid-column: 1 / -1; }
+
+        .form-group label {
+            font-size: 13px; font-weight: 500;
+            color: var(--primary); letter-spacing: 0.03em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 14px; color: var(--text);
+            background: var(--card-bg);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus { border-color: var(--accent); }
+
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-group input::placeholder,
+        .form-group textarea::placeholder { color: var(--border); }
+
+        /* ── Payment Section ── */
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .payment-option:hover { border-color: var(--secondary); }
+
+        .payment-option.selected {
+            border-color: var(--accent);
+            background: rgba(212, 112, 74, 0.03);
+        }
+
+        .payment-radio {
+            width: 18px; height: 18px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            flex-shrink: 0;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .payment-option.selected .payment-radio {
+            border-color: var(--accent);
+            background: var(--accent);
+        }
+
+        .payment-option.selected .payment-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px; height: 6px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .payment-label { font-size: 14px; font-weight: 500; color: var(--primary); }
+        .payment-desc { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+
+        /* ── Sidebar ── */
+        .sidebar { position: sticky; top: 30px; }
+
+        .summary-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 35px;
+            margin-bottom: 20px;
+        }
+
+        .summary-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 24px; color: var(--primary); font-weight: 600;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+            gap: 12px;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-light); font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .summary-value {
+            font-size: 14px; color: var(--primary); font-weight: 500;
+            text-align: right;
+        }
+
+        .summary-value.empty {
+            color: var(--border); font-style: italic; font-weight: 400;
+        }
+
+        .summary-divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary-total .label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-light); font-weight: 600;
+        }
+
+        .summary-total .price {
+            font-family: 'Crimson Pro', serif;
+            font-size: 28px; color: var(--primary); font-weight: 700;
+        }
+
+        .enroll-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--accent);
+            color: var(--background);
+            border: none;
+            font-size: 15px; font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .enroll-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(44, 24, 16, 0.15);
+        }
+
+        .notes-card {
+            background: var(--background);
+            border: 1px solid var(--border);
+            padding: 20px 24px;
+        }
+
+        .notes-card h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--primary); font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .notes-card ul { list-style: none; }
+
+        .notes-card ul li {
+            font-size: 13px; color: var(--text-light);
+            padding: 5px 0; padding-left: 14px;
+            position: relative; line-height: 1.5;
+        }
+
+        .notes-card ul li::before { content: '–'; position: absolute; left: 0; color: var(--accent); }
+
+        /* ── Confirmation Modal ── */
+        .modal {
+            display: none;
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center; align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 60px 50px;
+            max-width: 520px; width: 90%;
+            animation: modalSlideIn 0.4s ease-out;
+            text-align: center;
+        }
+
+        .confirm-icon {
+            width: 70px; height: 70px;
+            border-radius: 50%;
+            background: var(--success-bg);
+            border: 2px solid #C8E3D8;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 28px;
+            font-family: 'Crimson Pro', serif;
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .modal-content h2 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 36px; color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .modal-content p {
+            color: var(--text-light);
+            font-size: 15px; line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        .confirm-details {
+            background: var(--background);
+            border: 1px solid var(--border);
+            padding: 20px 24px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .confirm-detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .confirm-detail-item:last-child { border-bottom: none; }
+        .confirm-detail-item .key { color: var(--text-light); }
+        .confirm-detail-item .val { color: var(--primary); font-weight: 500; }
+
+        .confirm-btn {
+            display: inline-block;
+            padding: 14px 40px;
+            background: var(--primary);
+            color: var(--background);
+            border: none;
+            font-size: 14px; font-weight: 600;
+            cursor: pointer;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .confirm-btn:hover { background: var(--accent); }
+
+        /* ── Footer ── */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary); text-decoration: none;
+            font-size: 13px; font-weight: 500;
+            letter-spacing: 0.05em;
+            transition: color 0.3s ease;
+        }
+
+        .footer-back:hover { color: var(--accent); }
+
+        /* ── Animations ── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.4; }
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .main-content { grid-template-columns: 1fr; }
+            .sidebar { position: static; order: -1; }
+            .header-top { flex-direction: column; }
+            .courses-grid { grid-template-columns: 1fr; }
+            .plans-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .step-connector { flex: 0 0 30px; }
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 0 20px; }
+            .header-left h1 { font-size: 40px; }
+            .step-label { display: none; }
+            .type-toggle { width: 100%; }
+            .toggle-btn { flex: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="header-left">
+                    <div class="header-subtitle">教育培訓 · 報名系統</div>
+                    <h1>線上課程<br>報名平台</h1>
+                    <p class="header-desc">
+                        瀏覽課程、選擇時段、完成報名繳費，
+                        一站式管理您的學習計畫。
+                    </p>
+                </div>
+                <div class="school-info-card">
+                    <div class="label">機構名稱</div>
+                    <div class="value">文淵學苑</div>
+                    <div class="label">開放報名</div>
+                    <div class="value">週一至週六 09:00 – 20:00</div>
+                    <div class="label">當前狀態</div>
+                    <div class="value">
+                        <span class="status-badge">
+                            <span class="status-dot"></span>報名進行中
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-nav">
+                <div class="steps">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">選擇課程</div>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">選擇方案</div>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">選擇時段</div>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">填寫資料</div>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step" data-step="5">
+                        <div class="step-number">5</div>
+                        <div class="step-label">繳費方式</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="left-panel">
+
+                <!-- Step 1: Course Selection -->
+                <div class="section-block">
+                    <h2 class="section-title">選擇課程</h2>
+                    <p class="section-subtitle">請選擇您有興趣的課程項目</p>
+
+                    <div class="category-filter">
+                        <button class="cat-btn active" onclick="filterCourses(this,'all')">全部</button>
+                        <button class="cat-btn" onclick="filterCourses(this,'lang')">語言</button>
+                        <button class="cat-btn" onclick="filterCourses(this,'art')">才藝</button>
+                        <button class="cat-btn" onclick="filterCourses(this,'stem')">學科</button>
+                        <button class="cat-btn" onclick="filterCourses(this,'exam')">考試準備</button>
+                    </div>
+
+                    <div class="courses-grid" id="coursesGrid">
+
+                        <div class="course-card selected" data-cat="lang" onclick="selectCourse(this,'英語會話班','李明珠 老師',3200)">
+                            <div class="course-header">
+                                <span class="course-category-tag">語言</span>
+                                <span class="course-status open">報名中</span>
+                            </div>
+                            <div class="course-body">
+                                <div class="course-name">英語會話班</div>
+                                <div class="course-teacher">李明珠 老師</div>
+                                <div class="course-meta">
+                                    <div class="course-meta-row">
+                                        <span class="meta-label">年齡</span>
+                                        <span>國中生 / 成人</span>
+                                    </div>
+                                    <div class="course-meta-row">
+                                        <span class="meta-label">程度</span>
+                                        <span>初級 – 中級</span>
+                                    </div>
+                                    <div class="course-meta-row">
+                                        <span class="meta-label">人數</span>
+                                        <span>6 – 10 人</span>
+                                    </div>
+                                </div>
+                                <div class="capacity-bar"><div class="capacity-fill" style="width:60%"></div></div>
+                                <div class="capacity-text"><span>已報名 6 人</span><span>上限 10 人</span></div>
+                                <div style="margin-top:12px;">
+                                    <div class="course-price">NT$3,200</div>
+                                    <div class="course-price-note">每月（4 堂）</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-cat="art" onclick="selectCourse(this,'鋼琴基礎班','陳俊安 老師',2800)">
+                            <div class="course-header">
+                                <span class="course-category-tag">才藝</span>
+                                <span class="course-status open">報名中</span>
+                            </div>
+                            <div class="course-body">
+                                <div class="course-name">鋼琴基礎班</div>
+                                <div class="course-teacher">陳俊安 老師</div>
+                                <div class="course-meta">
+                                    <div class="course-meta-row">
+                                        <span class="meta-label">年齡</span>
+                                        <span>6 歲以上</span>
+                                    </div>
+                                    <div class="course-meta-row">
+                                        <span class="meta-label">程度</span>
+                                        <span>零基礎</span>
+                                    </div>
+                                    <div class="course-meta-row">
+                                        <span class="meta-label">人數</span>
+                                        <span>1 對 1 個別</span>
+                                    </div>
+                                </div>
+                                <div class="capacity-bar"><div class="capacity-fill" style="width:80%"></div></div>
+                                <div class="capacity-text"><span>本月剩 2 個時段</span><span></span></div>
+                                <div style="margin-top:12px;">
+                                    <div class="course-price">NT$2,800</div>
+                                    <div class="course-price-note">每月（4 堂 × 45 分鐘）</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-cat="stem" onclick="selectCourse(this,'數學進階班','王志豪 老師',3600)">
+                            <div class="course-header">
+                                <span class="course-category-tag">學科</span>
+                                <span class="course-status almost">剩少量名額</span>
+                            </div>
+                            <div class="course-body">
+                                <div class="course-name">數學進階班</div>
+                                <div class="course-teacher">王志豪 老師</div>
+                                <div class="course-meta">
+                                    <div class="course-meta-row">
+                                        <span class="meta-label">年齡</span>
+                                        <span>國中生</span>
+                                    </div>
+                                    <div class="course-meta-row">
+                                        <span class="meta-label">程度</span>
+                                        <span>中級 – 進階</span>
+                                    </div>
+                                    <div class="course-meta-row">
+                                        <span class="meta-label">人數</span>
+                                        <span>4 – 8 人</span>
+                                    </div>
+                                </div>
+                                <div class="capacity-bar"><div class="capacity-fill almost" style="width:88%"></div></div>
+                                <div class="capacity-text"><span>已報名 7 人</span><span>上限 8 人</span></div>
+                                <div style="margin-top:12px;">
+                                    <div class="course-price">NT$3,600</div>
+                                    <div class="course-price-note">每月（8 堂）</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-cat="art" onclick="selectCourse(this,'素描水彩班','林雅婷 老師',2400)">
+                            <div class="course-header">
+                                <span class="course-category-tag">才藝</span>
+                                <span class="course-status open">報名中</span>
+                            </div>
+                            <div class="course-body">
+                                <div class="course-name">素描水彩班</div>
+                                <div class="course-teacher">林雅婷 老師</div>
+                                <div class="course-meta">
+                                    <div class="course-meta-row">
+                                        <span class="meta-label">年齡</span>
+                                        <span>8 歲以上</span>
+                                    </div>
+                                    <div class="course-meta-row">
+                                        <span class="meta-label">程度</span>
+                                        <span>全程度</span>
+                                    </div>
+                                    <div class="course-meta-row">
+                                        <span class="meta-label">人數</span>
+                                        <span>4 – 8 人</span>
+                                    </div>
+                                </div>
+                                <div class="capacity-bar"><div class="capacity-fill" style="width:38%"></div></div>
+                                <div class="capacity-text"><span>已報名 3 人</span><span>上限 8 人</span></div>
+                                <div style="margin-top:12px;">
+                                    <div class="course-price">NT$2,400</div>
+                                    <div class="course-price-note">每月（4 堂 × 90 分鐘）</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card" data-cat="exam" onclick="selectCourse(this,'多益衝刺班','張雅萍 老師',4800)">
+                            <div class="course-header">
+                                <span class="course-category-tag">考試準備</span>
+                                <span class="course-status open">報名中</span>
+                            </div>
+                            <div class="course-body">
+                                <div class="course-name">多益衝刺班</div>
+                                <div class="course-teacher">張雅萍 老師</div>
+                                <div class="course-meta">
+                                    <div class="course-meta-row">
+                                        <span class="meta-label">年齡</span>
+                                        <span>高中 / 大學 / 社會人</span>
+                                    </div>
+                                    <div class="course-meta-row">
+                                        <span class="meta-label">程度</span>
+                                        <span>中級以上</span>
+                                    </div>
+                                    <div class="course-meta-row">
+                                        <span class="meta-label">人數</span>
+                                        <span>6 – 12 人</span>
+                                    </div>
+                                </div>
+                                <div class="capacity-bar"><div class="capacity-fill" style="width:50%"></div></div>
+                                <div class="capacity-text"><span>已報名 6 人</span><span>上限 12 人</span></div>
+                                <div style="margin-top:12px;">
+                                    <div class="course-price">NT$4,800</div>
+                                    <div class="course-price-note">共 8 週（16 堂）</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-card full" data-cat="lang">
+                            <div class="course-header">
+                                <span class="course-category-tag">語言</span>
+                                <span class="course-status full-tag">已額滿</span>
+                            </div>
+                            <div class="course-body">
+                                <div class="course-name">日語入門班</div>
+                                <div class="course-teacher">山田花子 老師</div>
+                                <div class="course-meta">
+                                    <div class="course-meta-row">
+                                        <span class="meta-label">年齡</span>
+                                        <span>成人</span>
+                                    </div>
+                                    <div class="course-meta-row">
+                                        <span class="meta-label">程度</span>
+                                        <span>零基礎</span>
+                                    </div>
+                                </div>
+                                <div class="capacity-bar"><div class="capacity-fill full-bar" style="width:100%"></div></div>
+                                <div class="capacity-text"><span>已報名 12 人</span><span>上限 12 人</span></div>
+                                <div style="margin-top:12px;">
+                                    <div class="course-price" style="color:var(--text-light)">NT$2,800</div>
+                                    <div class="course-price-note">下期開放候補</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Step 2: Plan Selection -->
+                <div class="section-block">
+                    <h2 class="section-title">選擇報名方案</h2>
+                    <p class="section-subtitle">選擇最適合您的學習方案</p>
+
+                    <div class="type-toggle">
+                        <button class="toggle-btn active" onclick="switchType(this,'regular')">定期班</button>
+                        <button class="toggle-btn" onclick="switchType(this,'trial')">體驗課</button>
+                        <button class="toggle-btn" onclick="switchType(this,'intensive')">密集班</button>
+                    </div>
+
+                    <div class="plans-grid" id="plansGrid">
+                        <div class="plan-card" onclick="selectPlan(this,'月繳方案',3200)">
+                            <div class="plan-name">月繳方案</div>
+                            <div class="plan-desc">按月繳費，彈性調整</div>
+                            <div class="plan-price">NT$3,200</div>
+                            <div class="plan-unit">每月 / 4 堂</div>
+                            <div class="plan-per-lesson">NT$800 / 堂</div>
+                        </div>
+                        <div class="plan-card recommended selected" onclick="selectPlan(this,'季繳方案',8640)">
+                            <div class="plan-name">季繳方案</div>
+                            <div class="plan-desc">3 個月付清，享有折扣</div>
+                            <div class="plan-price">NT$8,640</div>
+                            <div class="plan-unit">共 12 堂</div>
+                            <div class="plan-per-lesson">NT$720 / 堂 · 省 NT$960</div>
+                        </div>
+                        <div class="plan-card" onclick="selectPlan(this,'年繳方案',30720)">
+                            <div class="plan-name">年繳方案</div>
+                            <div class="plan-desc">全年最優惠，長期學習</div>
+                            <div class="plan-price">NT$30,720</div>
+                            <div class="plan-unit">共 48 堂</div>
+                            <div class="plan-per-lesson">NT$640 / 堂 · 省 NT$7,680</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Schedule Selection -->
+                <div class="section-block">
+                    <h2 class="section-title">選擇上課時段</h2>
+                    <p class="section-subtitle">請選擇每週固定的上課時間</p>
+
+                    <div class="schedule-list">
+                        <div class="schedule-item selected" onclick="selectSchedule(this,'週一 19:00 – 20:30')">
+                            <div class="schedule-left">
+                                <div class="schedule-day">一<span>MON</span></div>
+                                <div class="schedule-divider"></div>
+                                <div class="schedule-info">
+                                    <div class="schedule-time">19:00 – 20:30</div>
+                                    <div class="schedule-room">B2 教室 · 90 分鐘</div>
+                                </div>
+                            </div>
+                            <div class="schedule-right">
+                                <div class="schedule-spots">剩 4 位</div>
+                            </div>
+                        </div>
+
+                        <div class="schedule-item" onclick="selectSchedule(this,'週三 14:00 – 15:30')">
+                            <div class="schedule-left">
+                                <div class="schedule-day">三<span>WED</span></div>
+                                <div class="schedule-divider"></div>
+                                <div class="schedule-info">
+                                    <div class="schedule-time">14:00 – 15:30</div>
+                                    <div class="schedule-room">A1 教室 · 90 分鐘</div>
+                                </div>
+                            </div>
+                            <div class="schedule-right">
+                                <div class="schedule-spots">剩 6 位</div>
+                            </div>
+                        </div>
+
+                        <div class="schedule-item" onclick="selectSchedule(this,'週四 10:00 – 11:30')">
+                            <div class="schedule-left">
+                                <div class="schedule-day">四<span>THU</span></div>
+                                <div class="schedule-divider"></div>
+                                <div class="schedule-info">
+                                    <div class="schedule-time">10:00 – 11:30</div>
+                                    <div class="schedule-room">A2 教室 · 90 分鐘</div>
+                                </div>
+                            </div>
+                            <div class="schedule-right">
+                                <div class="schedule-spots few">剩 2 位</div>
+                            </div>
+                        </div>
+
+                        <div class="schedule-item" onclick="selectSchedule(this,'週六 09:00 – 10:30')">
+                            <div class="schedule-left">
+                                <div class="schedule-day">六<span>SAT</span></div>
+                                <div class="schedule-divider"></div>
+                                <div class="schedule-info">
+                                    <div class="schedule-time">09:00 – 10:30</div>
+                                    <div class="schedule-room">B1 教室 · 90 分鐘</div>
+                                </div>
+                            </div>
+                            <div class="schedule-right">
+                                <div class="schedule-spots">剩 5 位</div>
+                            </div>
+                        </div>
+
+                        <div class="schedule-item unavailable">
+                            <div class="schedule-left">
+                                <div class="schedule-day">六<span>SAT</span></div>
+                                <div class="schedule-divider"></div>
+                                <div class="schedule-info">
+                                    <div class="schedule-time">14:00 – 15:30</div>
+                                    <div class="schedule-room">A1 教室 · 90 分鐘</div>
+                                </div>
+                            </div>
+                            <div class="schedule-right">
+                                <div class="schedule-spots none">已額滿</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Student Info -->
+                <div class="section-block">
+                    <h2 class="section-title">填寫學員資料</h2>
+                    <p class="section-subtitle">請提供學員的基本資訊</p>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>學員姓名 *</label>
+                            <input type="text" placeholder="請輸入學員姓名" id="studentName" oninput="updateSummary()">
+                        </div>
+                        <div class="form-group">
+                            <label>就讀年級 *</label>
+                            <select>
+                                <option value="">請選擇</option>
+                                <option>國小低年級（1–2 年級）</option>
+                                <option>國小中年級（3–4 年級）</option>
+                                <option>國小高年級（5–6 年級）</option>
+                                <option>國中生</option>
+                                <option>高中生</option>
+                                <option>大學 / 研究生</option>
+                                <option>社會人士</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>家長 / 聯絡人姓名 *</label>
+                            <input type="text" placeholder="請輸入姓名" id="parentName" oninput="updateSummary()">
+                        </div>
+                        <div class="form-group">
+                            <label>聯絡手機 *</label>
+                            <input type="tel" placeholder="0912-345-678">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>電子信箱</label>
+                            <input type="email" placeholder="接收繳費通知與課程資訊">
+                        </div>
+                        <div class="form-group">
+                            <label>是否為舊生</label>
+                            <select>
+                                <option value="">請選擇</option>
+                                <option>否（初次報名）</option>
+                                <option>是（請填寫學號）</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full">
+                            <label>學習目標或特殊需求</label>
+                            <textarea placeholder="請描述學員的學習目標、程度說明，或需要老師特別注意的事項…"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Payment -->
+                <div class="section-block">
+                    <h2 class="section-title">選擇繳費方式</h2>
+                    <p class="section-subtitle">請選擇您偏好的付款方式</p>
+
+                    <div class="payment-options">
+                        <div class="payment-option selected" onclick="selectPayment(this,'銀行轉帳')">
+                            <div class="payment-radio"></div>
+                            <div>
+                                <div class="payment-label">銀行轉帳</div>
+                                <div class="payment-desc">完成報名後提供匯款帳號，請於 3 日內完成匯款</div>
+                            </div>
+                        </div>
+                        <div class="payment-option" onclick="selectPayment(this,'信用卡線上付款')">
+                            <div class="payment-radio"></div>
+                            <div>
+                                <div class="payment-label">信用卡線上付款</div>
+                                <div class="payment-desc">支援 VISA、MasterCard，可分 3 / 6 / 12 期零利率</div>
+                            </div>
+                        </div>
+                        <div class="payment-option" onclick="selectPayment(this,'現場繳費')">
+                            <div class="payment-radio"></div>
+                            <div>
+                                <div class="payment-label">現場繳費</div>
+                                <div class="payment-desc">首次上課前至櫃台繳費，接受現金或行動支付</div>
+                            </div>
+                        </div>
+                        <div class="payment-option" onclick="selectPayment(this,'Line Pay / 街口支付')">
+                            <div class="payment-radio"></div>
+                            <div>
+                                <div class="payment-label">Line Pay / 街口支付</div>
+                                <div class="payment-desc">行動支付快速完成，完成後自動發送繳費證明</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /left-panel -->
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="summary-card">
+                    <div class="summary-title">報名摘要</div>
+
+                    <div class="summary-item">
+                        <div class="summary-label">課程</div>
+                        <div class="summary-value" id="sum-course">英語會話班</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">老師</div>
+                        <div class="summary-value" id="sum-teacher">李明珠 老師</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">方案</div>
+                        <div class="summary-value" id="sum-plan">季繳方案（12 堂）</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">時段</div>
+                        <div class="summary-value" id="sum-schedule">週一 19:00 – 20:30</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">學員</div>
+                        <div class="summary-value empty" id="sum-student">請填寫資料</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">繳費</div>
+                        <div class="summary-value" id="sum-payment">銀行轉帳</div>
+                    </div>
+
+                    <div class="summary-divider"></div>
+
+                    <div class="summary-total">
+                        <div class="label">應繳金額</div>
+                        <div class="price" id="sum-price">NT$8,640</div>
+                    </div>
+                </div>
+
+                <button class="enroll-btn" onclick="submitEnrollment()">確認報名</button>
+
+                <div style="height: 20px;"></div>
+
+                <div class="notes-card">
+                    <h4>報名須知</h4>
+                    <ul>
+                        <li>報名後 3 日內完成繳費即確認入班</li>
+                        <li>開課前 7 日可申請全額退款</li>
+                        <li>開課後不接受退費，可轉讓名額</li>
+                        <li>缺課可於同期其他時段補課一次</li>
+                        <li>舊生續報享 9 折優惠</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <a href="booking-templates.html" class="footer-back">← 返回模板列表</a>
+                <span>© 2024 課程報名系統 · 教育培訓模板</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <div class="confirm-icon">ok</div>
+            <h2>報名成功！</h2>
+            <p>您的課程報名已送出，<br>請依繳費方式完成付款以確認入班。</p>
+            <div class="confirm-details" id="confirmDetails"></div>
+            <button class="confirm-btn" onclick="closeConfirm()">完成</button>
+        </div>
+    </div>
+
+    <script>
+        // ─── State ───────────────────────────────────────────
+        const state = {
+            course: '英語會話班',
+            teacher: '李明珠 老師',
+            plan: '季繳方案（12 堂）',
+            price: 8640,
+            schedule: '週一 19:00 – 20:30',
+            student: null,
+            payment: '銀行轉帳'
+        };
+
+        // ─── Course filter ────────────────────────────────────
+        function filterCourses(btn, cat) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.course-card').forEach(c => {
+                c.style.display = (cat === 'all' || c.dataset.cat === cat) ? 'block' : 'none';
+            });
+        }
+
+        // ─── Course select ────────────────────────────────────
+        function selectCourse(el, name, teacher, price) {
+            if (el.classList.contains('full')) return;
+            document.querySelectorAll('.course-card:not(.full)').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            state.course = name;
+            state.teacher = teacher;
+            state.price = price;
+            document.getElementById('sum-course').textContent = name;
+            document.getElementById('sum-teacher').textContent = teacher;
+            updateTotal();
+            updateStepIndicator(1);
+        }
+
+        // ─── Plan type toggle ─────────────────────────────────
+        function switchType(btn, type) {
+            document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const labels = {
+                regular:   [['月繳方案','按月繳費，彈性調整',state.price,'每月 / 4 堂',`NT$${Math.round(state.price/4)} / 堂`],
+                            ['季繳方案','3 個月付清，享有折扣',Math.round(state.price*3*0.9),'共 12 堂',`NT$${Math.round(state.price*3*0.9/12)} / 堂`],
+                            ['年繳方案','全年最優惠，長期學習',Math.round(state.price*12*0.8),'共 48 堂',`NT$${Math.round(state.price*12*0.8/48)} / 堂`]],
+                trial:     [['單堂體驗','無需承諾，先試聽',Math.round(state.price*1.2),'單堂體驗','不計入正式學費'],
+                            ['2 堂體驗','連續兩堂深度感受',Math.round(state.price*2*1.1),'2 堂','每堂費用含教材'],
+                            ['體驗 + 報名','體驗後決定報名折抵',Math.round(state.price*0.5),'體驗費','正式報名可折抵']],
+                intensive: [['2 週密集','短期衝刺，快速提升',Math.round(state.price*2),'2 週 / 10 堂',`NT$${Math.round(state.price*2/10)} / 堂`],
+                            ['4 週密集','一個月紮實練習',Math.round(state.price*3.5),'4 週 / 20 堂',`NT$${Math.round(state.price*3.5/20)} / 堂`],
+                            ['暑假密集班','假期最大化學習',Math.round(state.price*5),'6 週 / 30 堂',`NT$${Math.round(state.price*5/30)} / 堂`]]
+            };
+            const grid = document.getElementById('plansGrid');
+            grid.innerHTML = labels[type].map((p, i) => `
+                <div class="plan-card${i===1?' recommended':''}" onclick="selectPlan(this,'${p[0]}',${p[2]})">
+                    <div class="plan-name">${p[0]}</div>
+                    <div class="plan-desc">${p[1]}</div>
+                    <div class="plan-price">NT$${p[2].toLocaleString()}</div>
+                    <div class="plan-unit">${p[3]}</div>
+                    <div class="plan-per-lesson">${p[4]}</div>
+                </div>
+            `).join('');
+            // auto-select middle
+            selectPlan(grid.querySelectorAll('.plan-card')[1], labels[type][1][0], labels[type][1][2]);
+        }
+
+        // ─── Plan select ──────────────────────────────────────
+        function selectPlan(el, name, price) {
+            document.querySelectorAll('.plan-card').forEach(p => p.classList.remove('selected'));
+            el.classList.add('selected');
+            state.plan = name;
+            state.price = price;
+            document.getElementById('sum-plan').textContent = name;
+            updateTotal();
+            updateStepIndicator(2);
+        }
+
+        function updateTotal() {
+            document.getElementById('sum-price').textContent = 'NT$' + state.price.toLocaleString();
+        }
+
+        // ─── Schedule select ──────────────────────────────────
+        function selectSchedule(el, schedule) {
+            if (el.classList.contains('unavailable')) return;
+            document.querySelectorAll('.schedule-item:not(.unavailable)').forEach(s => s.classList.remove('selected'));
+            el.classList.add('selected');
+            state.schedule = schedule;
+            document.getElementById('sum-schedule').textContent = schedule;
+            document.getElementById('sum-schedule').classList.remove('empty');
+            updateStepIndicator(3);
+        }
+
+        // ─── Student summary ──────────────────────────────────
+        function updateSummary() {
+            const name = document.getElementById('studentName').value;
+            const parent = document.getElementById('parentName').value;
+            if (name) {
+                const display = name + (parent ? `（${parent}）` : '');
+                document.getElementById('sum-student').textContent = display;
+                document.getElementById('sum-student').classList.remove('empty');
+                updateStepIndicator(4);
+            }
+        }
+
+        // ─── Payment select ───────────────────────────────────
+        function selectPayment(el, method) {
+            document.querySelectorAll('.payment-option').forEach(p => p.classList.remove('selected'));
+            el.classList.add('selected');
+            state.payment = method;
+            document.getElementById('sum-payment').textContent = method;
+            updateStepIndicator(5);
+        }
+
+        // ─── Step indicator ───────────────────────────────────
+        function updateStepIndicator(upTo) {
+            document.querySelectorAll('.step').forEach((s, i) => {
+                s.classList.remove('active', 'completed');
+                if (i < upTo - 1) s.classList.add('completed');
+                else if (i === upTo - 1) s.classList.add('active');
+            });
+        }
+
+        // ─── Submit ───────────────────────────────────────────
+        function submitEnrollment() {
+            const name = document.getElementById('studentName').value;
+            if (!name) { alert('請填寫學員姓名'); return; }
+            const details = document.getElementById('confirmDetails');
+            details.innerHTML = [
+                ['課程', state.course],
+                ['老師', state.teacher],
+                ['方案', state.plan],
+                ['時段', state.schedule],
+                ['學員', name],
+                ['繳費', state.payment],
+                ['金額', 'NT$' + state.price.toLocaleString()]
+            ].map(([k,v]) => `<div class="confirm-detail-item"><span class="key">${k}</span><span class="val">${v}</span></div>`).join('');
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        function closeConfirm() {
+            document.getElementById('confirmModal').classList.remove('active');
+        }
+
+        document.getElementById('confirmModal').addEventListener('click', function(e) {
+            if (e.target === this) closeConfirm();
+        });
+    </script>
+</body>
+</html>
