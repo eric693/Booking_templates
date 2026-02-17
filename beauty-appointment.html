@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美容沙龍預約系統</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2C1810;
+            --accent: #D4704A;
+            --secondary: #8B6B47;
+            --background: #FAF8F5;
+            --card-bg: #FFFFFF;
+            --text: #1A1A1A;
+            --text-light: #6B6B6B;
+            --border: #E8E3DB;
+            --success: #4A8B6B;
+            --success-bg: #F0F7F4;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* ── Header ── */
+        header {
+            padding: 60px 0 50px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 40px;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 8px;
+            animation: fadeInUp 0.8s ease-out 0.1s both;
+        }
+
+        .header-left h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 56px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--primary);
+            line-height: 1.1;
+            animation: fadeInUp 0.8s ease-out;
+            margin-bottom: 12px;
+        }
+
+        .header-desc {
+            font-size: 17px;
+            color: var(--text-light);
+            max-width: 500px;
+            line-height: 1.7;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            margin-top: 16px;
+        }
+
+        .salon-info-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 30px;
+            min-width: 260px;
+            animation: fadeInUp 0.8s ease-out 0.3s both;
+        }
+
+        .salon-info-card .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .salon-info-card .value {
+            font-size: 15px;
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 18px;
+        }
+
+        .salon-info-card .value:last-child { margin-bottom: 0; }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--success);
+            background: var(--success-bg);
+            padding: 4px 10px;
+            border-radius: 2px;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        /* ── Step Nav ── */
+        .step-nav {
+            padding: 40px 0 0;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .steps { display: flex; align-items: center; }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 600;
+            color: var(--text-light);
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-number  { background: var(--accent); border-color: var(--accent); color: white; }
+        .step.completed .step-number { background: var(--primary); border-color: var(--primary); color: white; }
+
+        .step-label { font-size: 14px; color: var(--text-light); font-weight: 500; }
+        .step.active .step-label { color: var(--primary); }
+
+        .step-connector {
+            flex: 0 0 60px;
+            height: 1px;
+            background: var(--border);
+            margin: 0 8px;
+        }
+
+        /* ── Main Layout ── */
+        .main-content {
+            padding: 60px 0 100px;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .section-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 32px; font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        /* ── Stylist Cards ── */
+        .stylists-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .stylist-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .stylist-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(44, 24, 16, 0.06);
+        }
+
+        .stylist-card.selected {
+            border-color: var(--accent);
+            background: rgba(212, 112, 74, 0.03);
+        }
+
+        .stylist-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 12px; right: 12px;
+            width: 22px; height: 22px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700;
+        }
+
+        .stylist-photo {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            background: var(--border);
+        }
+
+        .stylist-photo img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .stylist-card:hover .stylist-photo img { transform: scale(1.05); }
+
+        .stylist-info { padding: 20px; }
+
+        .stylist-name {
+            font-family: 'Crimson Pro', serif;
+            font-size: 20px; font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .stylist-role {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .stylist-meta {
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .stylist-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            font-size: 11px;
+            padding: 3px 8px;
+            background: var(--background);
+            border: 1px solid var(--border);
+            color: var(--text-light);
+            letter-spacing: 0.04em;
+        }
+
+        .stylist-rating {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .stars {
+            color: var(--accent);
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Crimson Pro', serif;
+        }
+
+        /* ── Service Categories ── */
+        .service-categories {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .cat-btn {
+            font-size: 13px;
+            padding: 7px 16px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.03em;
+        }
+
+        .cat-btn.active, .cat-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* ── Services List ── */
+        .services-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 50px;
+        }
+
+        .service-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .service-item:hover { border-color: var(--secondary); }
+        .service-item.selected {
+            border-color: var(--accent);
+            background: rgba(212, 112, 74, 0.03);
+        }
+
+        .service-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .service-icon {
+            width: 40px; height: 40px;
+            background: var(--background);
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .service-name { font-weight: 500; color: var(--primary); font-size: 15px; }
+        .service-duration { font-size: 13px; color: var(--text-light); margin-top: 2px; }
+
+        .service-right { text-align: right; }
+
+        .service-price {
+            font-family: 'Crimson Pro', serif;
+            font-size: 20px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .service-note {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        /* ── Add-ons ── */
+        .addons-section { margin-bottom: 50px; }
+
+        .addons-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .addon-item {
+            padding: 14px 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .addon-item:hover { border-color: var(--secondary); }
+
+        .addon-item.selected {
+            border-color: var(--accent);
+            background: rgba(212, 112, 74, 0.03);
+        }
+
+        .addon-item.selected::before {
+            content: '✓';
+            position: absolute;
+            top: 8px; right: 10px;
+            font-size: 10px;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .addon-name { font-size: 13px; font-weight: 500; color: var(--primary); }
+        .addon-price { font-size: 12px; color: var(--accent); margin-top: 3px; }
+
+        /* ── Calendar ── */
+        .calendar-section { margin-bottom: 30px; }
+
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .calendar-nav { display: flex; align-items: center; gap: 20px; }
+
+        .nav-btn {
+            background: none;
+            border: 1px solid var(--border);
+            width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--primary);
+            font-size: 16px;
+        }
+
+        .nav-btn:hover { background: var(--primary); border-color: var(--primary); color: white; }
+
+        .current-month {
+            font-family: 'Crimson Pro', serif;
+            font-size: 22px; color: var(--primary); font-weight: 600;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-size: 12px; font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 8px 0;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text);
+            position: relative;
+        }
+
+        .calendar-day:hover:not(.disabled):not(.other-month) {
+            border-color: var(--border);
+            background: var(--card-bg);
+        }
+
+        .calendar-day.has-slot::after {
+            content: '';
+            position: absolute;
+            bottom: 4px; left: 50%; transform: translateX(-50%);
+            width: 4px; height: 4px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .calendar-day.selected { background: var(--primary); color: white; border-color: var(--primary); }
+        .calendar-day.today { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+        .calendar-day.disabled, .calendar-day.other-month { color: var(--border); cursor: default; }
+
+        /* ── Time Slots ── */
+        .time-slots-section { margin-bottom: 50px; }
+
+        .time-period { margin-bottom: 24px; }
+
+        .time-period-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .time-slot {
+            padding: 10px;
+            text-align: center;
+            font-size: 13px; font-weight: 500;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--primary);
+            background: var(--card-bg);
+        }
+
+        .time-slot:hover:not(.booked) { border-color: var(--accent); color: var(--accent); }
+        .time-slot.selected { background: var(--primary); border-color: var(--primary); color: white; }
+        .time-slot.booked { background: var(--background); color: var(--border); cursor: not-allowed; text-decoration: line-through; }
+
+        /* ── Customer Form ── */
+        .customer-form { margin-bottom: 50px; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group.full { grid-column: 1 / -1; }
+
+        .form-group label {
+            font-size: 13px; font-weight: 500;
+            color: var(--primary);
+            letter-spacing: 0.03em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            background: var(--card-bg);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus { border-color: var(--accent); }
+
+        .form-group textarea { resize: vertical; min-height: 80px; }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder { color: var(--border); }
+
+        /* ── Sidebar ── */
+        .sidebar { position: sticky; top: 30px; }
+
+        .summary-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 35px;
+            margin-bottom: 20px;
+        }
+
+        .summary-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 24px; color: var(--primary); font-weight: 600;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+            gap: 12px;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-light);
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .summary-value {
+            font-size: 14px; color: var(--primary); font-weight: 500;
+            text-align: right;
+        }
+
+        .summary-value.empty {
+            color: var(--border);
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .summary-divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary-total .label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-light); font-weight: 600;
+        }
+
+        .summary-total .price {
+            font-family: 'Crimson Pro', serif;
+            font-size: 28px; color: var(--primary); font-weight: 700;
+        }
+
+        .book-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--accent);
+            color: var(--background);
+            border: none;
+            font-size: 15px; font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .book-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(44, 24, 16, 0.15);
+        }
+
+        .notes-card {
+            background: var(--background);
+            border: 1px solid var(--border);
+            padding: 20px 24px;
+        }
+
+        .notes-card h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--primary); font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .notes-card ul { list-style: none; }
+
+        .notes-card ul li {
+            font-size: 13px; color: var(--text-light);
+            padding: 5px 0;
+            padding-left: 14px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .notes-card ul li::before { content: '–'; position: absolute; left: 0; color: var(--accent); }
+
+        /* ── Confirmation Modal ── */
+        .modal {
+            display: none;
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center; align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 60px 50px;
+            max-width: 520px; width: 90%;
+            animation: modalSlideIn 0.4s ease-out;
+            text-align: center;
+        }
+
+        .confirm-icon {
+            width: 70px; height: 70px;
+            border-radius: 50%;
+            background: var(--success-bg);
+            border: 2px solid #C8E3D8;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 28px;
+        }
+
+        .modal-content h2 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 36px; color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .modal-content p {
+            color: var(--text-light);
+            font-size: 15px; line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        .confirm-details {
+            background: var(--background);
+            border: 1px solid var(--border);
+            padding: 20px 24px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .confirm-detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .confirm-detail-item:last-child { border-bottom: none; }
+        .confirm-detail-item .key { color: var(--text-light); }
+        .confirm-detail-item .val { color: var(--primary); font-weight: 500; }
+
+        .confirm-btn {
+            display: inline-block;
+            padding: 14px 40px;
+            background: var(--primary);
+            color: var(--background);
+            border: none;
+            font-size: 14px; font-weight: 600;
+            cursor: pointer;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .confirm-btn:hover { background: var(--accent); }
+
+        /* ── Footer ── */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 13px; font-weight: 500;
+            letter-spacing: 0.05em;
+            transition: color 0.3s ease;
+        }
+
+        .footer-back:hover { color: var(--accent); }
+
+        /* ── Animations ── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.4; }
+        }
+
+        .section-block { animation: fadeInUp 0.7s ease-out both; }
+        .section-block:nth-child(1) { animation-delay: 0.1s; }
+        .section-block:nth-child(2) { animation-delay: 0.2s; }
+        .section-block:nth-child(3) { animation-delay: 0.3s; }
+        .section-block:nth-child(4) { animation-delay: 0.4s; }
+        .section-block:nth-child(5) { animation-delay: 0.5s; }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .main-content { grid-template-columns: 1fr; }
+            .sidebar { position: static; order: -1; }
+            .header-top { flex-direction: column; }
+            .stylists-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .step-connector { flex: 0 0 30px; }
+            .addons-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 0 20px; }
+            .header-left h1 { font-size: 40px; }
+            .time-grid { grid-template-columns: repeat(3, 1fr); }
+            .step-label { display: none; }
+            .addons-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="header-left">
+                    <div class="header-subtitle">美容美髮 · 預約系統</div>
+                    <h1>線上沙龍<br>預約平台</h1>
+                    <p class="header-desc">
+                        選擇您喜愛的設計師、服務項目與時間，
+                        輕鬆完成預約，讓美麗從這一刻開始。
+                    </p>
+                </div>
+                <div class="salon-info-card">
+                    <div class="label">沙龍名稱</div>
+                    <div class="value">LUMIÈRE 光感沙龍</div>
+                    <div class="label">營業時間</div>
+                    <div class="value">週二至週日 10:00 – 21:00</div>
+                    <div class="label">當前狀態</div>
+                    <div class="value">
+                        <span class="status-badge">
+                            <span class="status-dot"></span>接受預約中
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-nav">
+                <div class="steps">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">選擇設計師</div>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">選擇服務</div>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">選擇時間</div>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">填寫資料</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+
+            <!-- Left Panel -->
+            <div class="left-panel">
+
+                <!-- Step 1: Stylist Selection -->
+                <div class="section-block">
+                    <h2 class="section-title">選擇設計師</h2>
+                    <p class="section-subtitle">請選擇您希望服務的設計師</p>
+                    <div class="stylists-grid">
+                        <div class="stylist-card selected" onclick="selectStylist(this, '林佳穎 設計師', 'Senior Stylist')">
+                            <div class="stylist-photo">
+                                <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=300&fit=crop&crop=top" alt="林佳穎">
+                            </div>
+                            <div class="stylist-info">
+                                <div class="stylist-name">林佳穎</div>
+                                <div class="stylist-role">Senior Stylist</div>
+                                <div class="stylist-meta">資歷 8 年 · 擅長質感剪髮<br>韓系染燙、造型設計</div>
+                                <div class="stylist-tags">
+                                    <span class="tag">剪髮</span>
+                                    <span class="tag">染髮</span>
+                                    <span class="tag">燙髮</span>
+                                </div>
+                                <div class="stylist-rating">
+                                    <span class="stars">4.9</span>
+                                    <span>(128 評價)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stylist-card" onclick="selectStylist(this, '陳冠宇 設計師', 'Art Director')">
+                            <div class="stylist-photo">
+                                <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400&h=300&fit=crop&crop=top" alt="陳冠宇">
+                            </div>
+                            <div class="stylist-info">
+                                <div class="stylist-name">陳冠宇</div>
+                                <div class="stylist-role">Art Director</div>
+                                <div class="stylist-meta">資歷 12 年 · 專精色彩設計<br>挑染、漂染技術</div>
+                                <div class="stylist-tags">
+                                    <span class="tag">色彩設計</span>
+                                    <span class="tag">挑染</span>
+                                    <span class="tag">特殊染</span>
+                                </div>
+                                <div class="stylist-rating">
+                                    <span class="stars">4.8</span>
+                                    <span>(203 評價)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stylist-card" onclick="selectStylist(this, '王雅惠 設計師', 'Stylist')">
+                            <div class="stylist-photo">
+                                <img src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=400&h=300&fit=crop&crop=top" alt="王雅惠">
+                            </div>
+                            <div class="stylist-info">
+                                <div class="stylist-name">王雅惠</div>
+                                <div class="stylist-role">Stylist</div>
+                                <div class="stylist-meta">資歷 5 年 · 專注頭皮護理<br>日系空氣感剪髮</div>
+                                <div class="stylist-tags">
+                                    <span class="tag">頭皮護理</span>
+                                    <span class="tag">日系剪髮</span>
+                                    <span class="tag">護髮</span>
+                                </div>
+                                <div class="stylist-rating">
+                                    <span class="stars">4.7</span>
+                                    <span>(86 評價)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stylist-card" onclick="selectStylist(this, '不指定設計師', '系統自動安排')">
+                            <div class="stylist-photo" style="background: var(--background); display:flex; align-items:center; justify-content:center;">
+                                <span style="font-size: 32px; opacity: 0.2; font-family: 'Crimson Pro', serif; letter-spacing: -2px;">---</span>
+                            </div>
+                            <div class="stylist-info">
+                                <div class="stylist-name">不指定設計師</div>
+                                <div class="stylist-role">系統自動安排</div>
+                                <div class="stylist-meta">由系統依據您選擇的服務<br>安排最適合的設計師</div>
+                                <div class="stylist-tags">
+                                    <span class="tag">彈性安排</span>
+                                    <span class="tag">早預約</span>
+                                </div>
+                                <div class="stylist-rating">
+                                    <span style="font-size:13px;color:var(--text-light);">依服務類型安排</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Service Selection -->
+                <div class="section-block">
+                    <h2 class="section-title">選擇服務項目</h2>
+                    <p class="section-subtitle">請選擇此次的主要服務</p>
+
+                    <div class="service-categories">
+                        <button class="cat-btn active" onclick="filterServices(this, 'all')">全部</button>
+                        <button class="cat-btn" onclick="filterServices(this, 'cut')">剪髮</button>
+                        <button class="cat-btn" onclick="filterServices(this, 'color')">染髮</button>
+                        <button class="cat-btn" onclick="filterServices(this, 'perm')">燙髮</button>
+                        <button class="cat-btn" onclick="filterServices(this, 'care')">護理</button>
+                    </div>
+
+                    <div class="services-list" id="servicesList">
+                        <div class="service-item selected" data-cat="cut" onclick="selectService(this, '質感剪髮', '60 分鐘', 800)">
+                            <div class="service-left">
+                                <div class="service-icon">—</div>
+                                <div>
+                                    <div class="service-name">質感剪髮</div>
+                                    <div class="service-duration">約 60 分鐘</div>
+                                </div>
+                            </div>
+                            <div class="service-right">
+                                <div class="service-price">NT$800</div>
+                                <div class="service-note">含洗髮吹整</div>
+                            </div>
+                        </div>
+
+                        <div class="service-item" data-cat="cut" onclick="selectService(this, '設計師剪髮', '90 分鐘', 1200)">
+                            <div class="service-left">
+                                <div class="service-icon">—</div>
+                                <div>
+                                    <div class="service-name">設計師剪髮</div>
+                                    <div class="service-duration">約 90 分鐘</div>
+                                </div>
+                            </div>
+                            <div class="service-right">
+                                <div class="service-price">NT$1,200</div>
+                                <div class="service-note">含洗髮護髮吹整</div>
+                            </div>
+                        </div>
+
+                        <div class="service-item" data-cat="color" onclick="selectService(this, '單色染髮', '120 分鐘', 2500)">
+                            <div class="service-left">
+                                <div class="service-icon">◈</div>
+                                <div>
+                                    <div class="service-name">單色染髮</div>
+                                    <div class="service-duration">約 120 分鐘</div>
+                                </div>
+                            </div>
+                            <div class="service-right">
+                                <div class="service-price">NT$2,500起</div>
+                                <div class="service-note">依髮量計費</div>
+                            </div>
+                        </div>
+
+                        <div class="service-item" data-cat="color" onclick="selectService(this, '漂染設計', '180 分鐘', 4500)">
+                            <div class="service-left">
+                                <div class="service-icon">◈</div>
+                                <div>
+                                    <div class="service-name">漂染設計</div>
+                                    <div class="service-duration">約 180 分鐘</div>
+                                </div>
+                            </div>
+                            <div class="service-right">
+                                <div class="service-price">NT$4,500起</div>
+                                <div class="service-note">依設計複雜度</div>
+                            </div>
+                        </div>
+
+                        <div class="service-item" data-cat="perm" onclick="selectService(this, '燙髮造型', '150 分鐘', 3000)">
+                            <div class="service-left">
+                                <div class="service-icon">◇</div>
+                                <div>
+                                    <div class="service-name">燙髮造型</div>
+                                    <div class="service-duration">約 150 分鐘</div>
+                                </div>
+                            </div>
+                            <div class="service-right">
+                                <div class="service-price">NT$3,000起</div>
+                                <div class="service-note">依髮量計費</div>
+                            </div>
+                        </div>
+
+                        <div class="service-item" data-cat="care" onclick="selectService(this, '頭皮護理療程', '60 分鐘', 1800)">
+                            <div class="service-left">
+                                <div class="service-icon">○</div>
+                                <div>
+                                    <div class="service-name">頭皮護理療程</div>
+                                    <div class="service-duration">約 60 分鐘</div>
+                                </div>
+                            </div>
+                            <div class="service-right">
+                                <div class="service-price">NT$1,800</div>
+                                <div class="service-note">含深層清潔</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2b: Add-ons -->
+                <div class="section-block addons-section">
+                    <h2 class="section-title">加購項目</h2>
+                    <p class="section-subtitle">可選擇加購以下項目（可複選）</p>
+                    <div class="addons-grid">
+                        <div class="addon-item" onclick="toggleAddon(this, '深層護髮', 600)">
+                            <div class="addon-name">深層護髮</div>
+                            <div class="addon-price">+ NT$600</div>
+                        </div>
+                        <div class="addon-item" onclick="toggleAddon(this, '頭皮精華', 400)">
+                            <div class="addon-name">頭皮精華</div>
+                            <div class="addon-price">+ NT$400</div>
+                        </div>
+                        <div class="addon-item" onclick="toggleAddon(this, '蛋白護理', 500)">
+                            <div class="addon-name">蛋白護理</div>
+                            <div class="addon-price">+ NT$500</div>
+                        </div>
+                        <div class="addon-item" onclick="toggleAddon(this, '頭部按摩', 300)">
+                            <div class="addon-name">頭部按摩</div>
+                            <div class="addon-price">+ NT$300</div>
+                        </div>
+                        <div class="addon-item" onclick="toggleAddon(this, '造型固定', 200)">
+                            <div class="addon-name">造型固定</div>
+                            <div class="addon-price">+ NT$200</div>
+                        </div>
+                        <div class="addon-item" onclick="toggleAddon(this, '補色修護', 800)">
+                            <div class="addon-name">補色修護</div>
+                            <div class="addon-price">+ NT$800</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Calendar & Time -->
+                <div class="section-block">
+                    <h2 class="section-title">選擇預約時間</h2>
+                    <p class="section-subtitle">請選擇方便的日期與時段</p>
+
+                    <div class="calendar-section">
+                        <div class="calendar-header">
+                            <div class="calendar-nav">
+                                <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
+                                <div class="current-month" id="currentMonth"></div>
+                                <button class="nav-btn" onclick="changeMonth(1)">›</button>
+                            </div>
+                        </div>
+                        <div class="calendar-grid" id="calendarGrid"></div>
+                    </div>
+
+                    <div class="time-slots-section" id="timeSlotsSection" style="display:none;">
+                        <p class="section-subtitle" id="selectedDateLabel"></p>
+                        <div class="time-period">
+                            <div class="time-period-label">上午 Morning</div>
+                            <div class="time-grid">
+                                <div class="time-slot" onclick="selectTime(this,'10:00')">10:00</div>
+                                <div class="time-slot booked">10:30</div>
+                                <div class="time-slot" onclick="selectTime(this,'11:00')">11:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'11:30')">11:30</div>
+                            </div>
+                        </div>
+                        <div class="time-period">
+                            <div class="time-period-label">下午 Afternoon</div>
+                            <div class="time-grid">
+                                <div class="time-slot" onclick="selectTime(this,'13:00')">13:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'13:30')">13:30</div>
+                                <div class="time-slot booked">14:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'14:30')">14:30</div>
+                                <div class="time-slot" onclick="selectTime(this,'15:00')">15:00</div>
+                                <div class="time-slot booked">15:30</div>
+                                <div class="time-slot" onclick="selectTime(this,'16:00')">16:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'16:30')">16:30</div>
+                            </div>
+                        </div>
+                        <div class="time-period">
+                            <div class="time-period-label">傍晚 Evening</div>
+                            <div class="time-grid">
+                                <div class="time-slot" onclick="selectTime(this,'17:30')">17:30</div>
+                                <div class="time-slot booked">18:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'18:30')">18:30</div>
+                                <div class="time-slot" onclick="selectTime(this,'19:00')">19:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'19:30')">19:30</div>
+                                <div class="time-slot booked">20:00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Customer Info -->
+                <div class="section-block">
+                    <h2 class="section-title">填寫顧客資料</h2>
+                    <p class="section-subtitle">請提供您的聯絡資訊以完成預約</p>
+                    <div class="customer-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>姓名 *</label>
+                                <input type="text" placeholder="請輸入姓名" id="customerName" oninput="updateSummary()">
+                            </div>
+                            <div class="form-group">
+                                <label>手機號碼 *</label>
+                                <input type="tel" placeholder="0912-345-678" id="customerPhone" oninput="updateSummary()">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>電子信箱</label>
+                                <input type="email" placeholder="example@mail.com">
+                            </div>
+                            <div class="form-group">
+                                <label>是否為會員</label>
+                                <select>
+                                    <option value="">請選擇</option>
+                                    <option>是（請輸入會員編號）</option>
+                                    <option>否（首次到訪）</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group full">
+                                <label>髮型參考或特殊需求</label>
+                                <textarea placeholder="可貼上參考圖片網址，或描述您希望的髮型效果、髮質狀況等，讓設計師提前準備…"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /left-panel -->
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="summary-card">
+                    <div class="summary-title">預約摘要</div>
+
+                    <div class="summary-item">
+                        <div class="summary-label">設計師</div>
+                        <div class="summary-value" id="sum-stylist">林佳穎 設計師</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">職級</div>
+                        <div class="summary-value" id="sum-role">Senior Stylist</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">服務項目</div>
+                        <div class="summary-value" id="sum-service">質感剪髮</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">加購</div>
+                        <div class="summary-value empty" id="sum-addons">未選擇</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">日期</div>
+                        <div class="summary-value empty" id="sum-date">請選擇日期</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">時間</div>
+                        <div class="summary-value empty" id="sum-time">請選擇時間</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">顧客</div>
+                        <div class="summary-value empty" id="sum-customer">請填寫資料</div>
+                    </div>
+
+                    <div class="summary-divider"></div>
+
+                    <div class="summary-total">
+                        <div class="label">預估費用</div>
+                        <div class="price" id="sum-price">NT$800</div>
+                    </div>
+                </div>
+
+                <button class="book-btn" onclick="submitBooking()">確認預約</button>
+
+                <div style="height: 20px;"></div>
+
+                <div class="notes-card">
+                    <h4>注意事項</h4>
+                    <ul>
+                        <li>請於預約時間前 5 分鐘到達</li>
+                        <li>如需更改請提前 24 小時通知</li>
+                        <li>染燙服務建議攜帶參考圖</li>
+                        <li>首次染漂請提前告知髮質狀況</li>
+                        <li>週六日為熱門時段，建議提早預約</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <a href="booking-templates.html" class="footer-back">← 返回模板列表</a>
+                <span>© 2024 美容沙龍預約系統 · 美容美髮模板</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <div class="confirm-icon">✓</div>
+            <h2>預約成功！</h2>
+            <p>您的沙龍預約已確認，<br>我們將以簡訊傳送預約提醒給您。</p>
+            <div class="confirm-details" id="confirmDetails"></div>
+            <button class="confirm-btn" onclick="closeConfirm()">完成</button>
+        </div>
+    </div>
+
+    <script>
+        // ─── State ───────────────────────────────────────────
+        const state = {
+            stylist: '林佳穎 設計師',
+            role: 'Senior Stylist',
+            service: '質感剪髮',
+            basePrice: 800,
+            addonPrice: 0,
+            addons: [],
+            date: null,
+            time: null,
+            customer: null
+        };
+
+        // ─── Stylist ──────────────────────────────────────────
+        function selectStylist(el, name, role) {
+            document.querySelectorAll('.stylist-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            state.stylist = name;
+            state.role = role;
+            document.getElementById('sum-stylist').textContent = name;
+            document.getElementById('sum-stylist').classList.remove('empty');
+            document.getElementById('sum-role').textContent = role;
+            updateStepIndicator(1);
+        }
+
+        // ─── Service filter ───────────────────────────────────
+        function filterServices(btn, cat) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.service-item').forEach(item => {
+                item.style.display = (cat === 'all' || item.dataset.cat === cat) ? 'flex' : 'none';
+            });
+        }
+
+        // ─── Service ──────────────────────────────────────────
+        function selectService(el, name, duration, price) {
+            document.querySelectorAll('.service-item').forEach(s => s.classList.remove('selected'));
+            el.classList.add('selected');
+            state.service = name;
+            state.basePrice = price;
+            document.getElementById('sum-service').textContent = name;
+            document.getElementById('sum-service').classList.remove('empty');
+            updatePrice();
+            updateStepIndicator(2);
+        }
+
+        // ─── Add-ons ──────────────────────────────────────────
+        function toggleAddon(el, name, price) {
+            el.classList.toggle('selected');
+            const idx = state.addons.indexOf(name);
+            if (idx === -1) {
+                state.addons.push(name);
+                state.addonPrice += price;
+            } else {
+                state.addons.splice(idx, 1);
+                state.addonPrice -= price;
+            }
+            const addonEl = document.getElementById('sum-addons');
+            if (state.addons.length === 0) {
+                addonEl.textContent = '未選擇';
+                addonEl.classList.add('empty');
+            } else {
+                addonEl.textContent = state.addons.join('、');
+                addonEl.classList.remove('empty');
+            }
+            updatePrice();
+        }
+
+        function updatePrice() {
+            const total = state.basePrice + state.addonPrice;
+            document.getElementById('sum-price').textContent = 'NT$' + total.toLocaleString();
+        }
+
+        // ─── Calendar ─────────────────────────────────────────
+        let currentDate = new Date();
+        const months = ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+        const days = ['日','一','二','三','四','五','六'];
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            document.getElementById('currentMonth').textContent = `${year} 年 ${months[month]}`;
+
+            const grid = document.getElementById('calendarGrid');
+            const today = new Date();
+            let html = days.map(d => `<div class="calendar-day-header">${d}</div>`).join('');
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const prevDays = new Date(year, month, 0).getDate();
+
+            for (let i = firstDay - 1; i >= 0; i--)
+                html += `<div class="calendar-day other-month">${prevDays - i}</div>`;
+
+            const slotDays = [2,3,5,7,9,10,12,14,16,17,19,21,23,24,26,28,30];
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const date = new Date(year, month, d);
+                const isToday = date.toDateString() === today.toDateString();
+                const isPast = date < today && !isToday;
+                const isMonday = date.getDay() === 1; // Closed on Monday
+                const hasSlot = slotDays.includes(d) && !isPast && !isMonday;
+                const classes = ['calendar-day', isToday?'today':'', isPast||isMonday?'disabled':'', hasSlot?'has-slot':''].filter(Boolean).join(' ');
+                const onclick = (!isPast && !isMonday) ? `onclick="selectDate(this,${year},${month},${d})"` : '';
+                html += `<div class="${classes}" ${onclick}>${d}</div>`;
+            }
+
+            const rem = (7 - (firstDay + daysInMonth) % 7) % 7;
+            for (let d = 1; d <= rem; d++)
+                html += `<div class="calendar-day other-month">${d}</div>`;
+
+            grid.innerHTML = html;
+        }
+
+        function changeMonth(dir) {
+            currentDate.setMonth(currentDate.getMonth() + dir);
+            renderCalendar();
+        }
+
+        function selectDate(el, year, month, day) {
+            document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+            el.classList.add('selected');
+            const d = new Date(year, month, day);
+            state.date = `${year}/${String(month+1).padStart(2,'0')}/${String(day).padStart(2,'0')}`;
+            const weekdays = ['日','一','二','三','四','五','六'];
+            document.getElementById('sum-date').textContent = state.date + ' 週' + weekdays[d.getDay()];
+            document.getElementById('sum-date').classList.remove('empty');
+            document.getElementById('selectedDateLabel').textContent = `${state.date} 週${weekdays[d.getDay()]} 可預約時段`;
+            document.getElementById('timeSlotsSection').style.display = 'block';
+            updateStepIndicator(3);
+            document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+            state.time = null;
+            document.getElementById('sum-time').textContent = '請選擇時間';
+            document.getElementById('sum-time').classList.add('empty');
+        }
+
+        // ─── Time ────────────────────────────────────────────
+        function selectTime(el, time) {
+            document.querySelectorAll('.time-slot:not(.booked)').forEach(s => s.classList.remove('selected'));
+            el.classList.add('selected');
+            state.time = time;
+            document.getElementById('sum-time').textContent = time;
+            document.getElementById('sum-time').classList.remove('empty');
+        }
+
+        // ─── Customer ─────────────────────────────────────────
+        function updateSummary() {
+            const name = document.getElementById('customerName').value;
+            const phone = document.getElementById('customerPhone').value;
+            if (name) {
+                document.getElementById('sum-customer').textContent = name + (phone ? ` · ${phone}` : '');
+                document.getElementById('sum-customer').classList.remove('empty');
+                updateStepIndicator(4);
+            }
+        }
+
+        // ─── Step Indicator ───────────────────────────────────
+        function updateStepIndicator(upTo) {
+            document.querySelectorAll('.step').forEach((s, i) => {
+                s.classList.remove('active', 'completed');
+                if (i < upTo - 1) s.classList.add('completed');
+                else if (i === upTo - 1) s.classList.add('active');
+            });
+        }
+
+        // ─── Submit ───────────────────────────────────────────
+        function submitBooking() {
+            const name = document.getElementById('customerName').value;
+            if (!state.date || !state.time || !name) {
+                alert('請完整填寫預約資訊（日期、時間、姓名）');
+                return;
+            }
+            const addonText = state.addons.length > 0 ? state.addons.join('、') : '無';
+            const details = document.getElementById('confirmDetails');
+            details.innerHTML = [
+                ['設計師', state.stylist + '（' + state.role + '）'],
+                ['服務', state.service],
+                ['加購', addonText],
+                ['日期', state.date],
+                ['時間', state.time],
+                ['顧客', name],
+                ['費用', document.getElementById('sum-price').textContent]
+            ].map(([k,v]) => `<div class="confirm-detail-item"><span class="key">${k}</span><span class="val">${v}</span></div>`).join('');
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        function closeConfirm() {
+            document.getElementById('confirmModal').classList.remove('active');
+        }
+
+        document.getElementById('confirmModal').addEventListener('click', function(e) {
+            if (e.target === this) closeConfirm();
+        });
+
+        // ─── Init ─────────────────────────────────────────────
+        renderCalendar();
+    </script>
+</body>
+</html>
