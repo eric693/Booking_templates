@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模板客製化工具</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2C1810;
+            --accent: #D4704A;
+            --secondary: #8B6B47;
+            --background: #FAF8F5;
+            --card-bg: #FFFFFF;
+            --text: #1A1A1A;
+            --text-light: #6B6B6B;
+            --border: #E8E3DB;
+            --panel-w: 380px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Top Bar ── */
+        .topbar {
+            height: 60px;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            flex-shrink: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-link {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            letter-spacing: 0.04em;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: rgba(255,255,255,0.9); }
+
+        .topbar-divider {
+            width: 1px;
+            height: 18px;
+            background: rgba(255,255,255,0.15);
+        }
+
+        .topbar-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 20px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .template-tag {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--accent);
+            background: rgba(212,112,74,0.15);
+            padding: 3px 10px;
+            font-weight: 600;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .preview-toggle {
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+            background: none;
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 7px 16px;
+            cursor: pointer;
+            font-family: 'Work Sans', sans-serif;
+            transition: all 0.2s;
+            letter-spacing: 0.03em;
+        }
+
+        .preview-toggle:hover {
+            background: rgba(255,255,255,0.08);
+            color: white;
+        }
+
+        .download-btn {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            background: white;
+            border: none;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .download-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .download-btn:active { transform: translateY(0); }
+
+        /* ── Main Split Layout ── */
+        .workspace {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* ── Left Panel ── */
+        .panel {
+            width: var(--panel-w);
+            flex-shrink: 0;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .panel-tab {
+            flex: 1;
+            padding: 14px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-light);
+            cursor: pointer;
+            text-align: center;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .panel-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--accent);
+        }
+
+        .panel-tab:hover:not(.active) {
+            color: var(--primary);
+            background: var(--background);
+        }
+
+        .panel-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px 24px;
+        }
+
+        .panel-body::-webkit-scrollbar { width: 4px; }
+        .panel-body::-webkit-scrollbar-thumb { background: var(--border); }
+
+        .tab-section { display: none; }
+        .tab-section.active { display: block; }
+
+        /* ── Form Fields ── */
+        .field-group {
+            margin-bottom: 28px;
+        }
+
+        .field-group-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .field {
+            margin-bottom: 16px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            letter-spacing: 0.04em;
+            margin-bottom: 6px;
+        }
+
+        .field input[type="text"],
+        .field input[type="tel"],
+        .field input[type="email"],
+        .field input[type="url"],
+        .field select,
+        .field textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 13px;
+            color: var(--text);
+            background: var(--background);
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus { border-color: var(--accent); background: white; }
+
+        .field input::placeholder,
+        .field textarea::placeholder { color: var(--border); }
+
+        .field textarea { resize: vertical; min-height: 70px; }
+
+        /* ── Color Picker ── */
+        .color-field {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-swatch {
+            width: 38px; height: 38px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .color-swatch input[type="color"] {
+            position: absolute;
+            inset: -4px;
+            width: calc(100% + 8px);
+            height: calc(100% + 8px);
+            cursor: pointer;
+            border: none;
+            padding: 0;
+            background: none;
+        }
+
+        .color-hex {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 13px;
+            color: var(--text);
+            background: var(--background);
+            outline: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .color-hex:focus { border-color: var(--accent); }
+
+        /* ── Preset Palettes ── */
+        .palette-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .palette-chip {
+            display: flex;
+            gap: 0;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .palette-chip:hover { border-color: var(--primary); }
+        .palette-chip.active { border-color: var(--accent); }
+
+        .palette-chip span {
+            display: block;
+            width: 22px; height: 22px;
+        }
+
+        /* ── Logo Upload ── */
+        .logo-upload-area {
+            border: 2px dashed var(--border);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--background);
+        }
+
+        .logo-upload-area:hover { border-color: var(--accent); }
+
+        .logo-upload-area p {
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .logo-upload-area .upload-hint {
+            font-size: 11px;
+            color: var(--border);
+            margin-top: 6px;
+        }
+
+        #logoPreviewImg {
+            max-width: 100%;
+            max-height: 60px;
+            margin-top: 10px;
+            object-fit: contain;
+        }
+
+        /* ── Hours builder ── */
+        .hours-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .hours-row .day-label {
+            font-size: 12px;
+            color: var(--text-light);
+            width: 28px;
+            flex-shrink: 0;
+        }
+
+        .hours-row input[type="time"] {
+            flex: 1;
+            padding: 7px 8px;
+            border: 1px solid var(--border);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 12px;
+            outline: none;
+            background: var(--background);
+        }
+
+        .hours-row input[type="time"]:focus { border-color: var(--accent); }
+
+        .hours-row .closed-toggle {
+            font-size: 11px;
+            color: var(--text-light);
+            cursor: pointer;
+            white-space: nowrap;
+            padding: 4px 8px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .hours-row .closed-toggle.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* ── Live update indicator ── */
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 0.06em;
+        }
+
+        .live-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #4A8B6B;
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* ── Preview area ── */
+        .preview-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #E8E3DB;
+            overflow: hidden;
+        }
+
+        .preview-toolbar {
+            height: 44px;
+            background: var(--background);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .preview-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .scale-btns {
+            display: flex;
+            gap: 6px;
+            margin-left: auto;
+        }
+
+        .scale-btn {
+            font-size: 11px;
+            padding: 4px 10px;
+            border: 1px solid var(--border);
+            background: none;
+            cursor: pointer;
+            font-family: 'Work Sans', sans-serif;
+            color: var(--text-light);
+            transition: all 0.2s;
+            letter-spacing: 0.04em;
+        }
+
+        .scale-btn.active, .scale-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .preview-frame-wrap {
+            flex: 1;
+            overflow: auto;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .preview-frame-wrap.mobile { align-items: flex-start; }
+
+        .preview-shell {
+            background: white;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 1100px;
+            min-height: 100%;
+        }
+
+        .preview-shell.mobile-size {
+            max-width: 390px;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+        }
+
+        iframe#previewFrame {
+            width: 100%;
+            border: none;
+            display: block;
+            min-height: 800px;
+        }
+
+        .preview-shell.mobile-size iframe#previewFrame {
+            min-height: 700px;
+        }
+
+        /* ── Step dots for nav ── */
+        .step-dots {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .step-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .step-dot.active { background: var(--accent); width: 24px; border-radius: 4px; }
+
+        /* ── Apply btn inside panel ── */
+        .apply-btn {
+            width: 100%;
+            padding: 13px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .apply-btn:hover { background: var(--primary); }
+
+        /* ── Download modal ── */
+        .modal {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-box {
+            background: var(--card-bg);
+            padding: 50px 44px;
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.94); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-icon {
+            width: 60px; height: 60px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 24px;
+            font-family: 'Crimson Pro', serif;
+            font-size: 22px;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .modal-box h2 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 30px;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .modal-box p {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .modal-btn.primary { background: var(--primary); color: white; }
+        .modal-btn.primary:hover { background: var(--accent); }
+        .modal-btn.secondary { background: var(--background); color: var(--text-light); border: 1px solid var(--border); }
+        .modal-btn.secondary:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .panel { width: 100%; position: absolute; bottom: 0; left: 0; right: 0; z-index: 10; max-height: 60vh; border-top: 1px solid var(--border); border-right: none; }
+            .preview-area { flex: 1; }
+            .topbar-title { font-size: 16px; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .panel-body { animation: fadeInUp 0.4s ease-out; }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="topbar">
+        <div class="topbar-left">
+            <a href="booking-templates.html" class="back-link">← 返回</a>
+            <div class="topbar-divider"></div>
+            <div class="topbar-title">模板客製化工具</div>
+            <div class="template-tag" id="currentTemplateName">醫療診所</div>
+        </div>
+        <div class="topbar-right">
+            <div class="live-badge">
+                <div class="live-dot"></div>
+                即時預覽
+            </div>
+            <button class="preview-toggle" onclick="toggleMobile()">手機預覽</button>
+            <button class="download-btn" onclick="openDownloadModal()">下載 HTML</button>
+        </div>
+    </div>
+
+    <div class="workspace">
+
+        <!-- Left Panel -->
+        <div class="panel">
+            <div class="panel-tabs">
+                <div class="panel-tab active" onclick="switchTab('basic', this)">基本資訊</div>
+                <div class="panel-tab" onclick="switchTab('style', this)">顏色風格</div>
+                <div class="panel-tab" onclick="switchTab('content', this)">服務內容</div>
+                <div class="panel-tab" onclick="switchTab('template', this)">切換模板</div>
+            </div>
+
+            <div class="panel-body">
+
+                <!-- TAB: 基本資訊 -->
+                <div class="tab-section active" id="tab-basic">
+
+                    <div class="field-group">
+                        <div class="field-group-title">店家資訊</div>
+                        <div class="field">
+                            <label>店家 / 診所名稱</label>
+                            <input type="text" id="f-name" placeholder="例如：仁愛家庭診所" oninput="liveUpdate()">
+                        </div>
+                        <div class="field">
+                            <label>副標題 / 標語</label>
+                            <input type="text" id="f-tagline" placeholder="例如：醫療診所 · 預約系統" oninput="liveUpdate()">
+                        </div>
+                        <div class="field">
+                            <label>聯絡電話</label>
+                            <input type="tel" id="f-phone" placeholder="02-1234-5678" oninput="liveUpdate()">
+                        </div>
+                        <div class="field">
+                            <label>電子信箱</label>
+                            <input type="email" id="f-email" placeholder="info@clinic.com" oninput="liveUpdate()">
+                        </div>
+                        <div class="field">
+                            <label>地址</label>
+                            <input type="text" id="f-address" placeholder="台北市大安區忠孝東路四段" oninput="liveUpdate()">
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <div class="field-group-title">營業時間</div>
+                        <div class="field">
+                            <input type="text" id="f-hours" placeholder="例如：週一至週六 08:30 – 20:00" oninput="liveUpdate()">
+                        </div>
+                        <div class="field">
+                            <label>休息日</label>
+                            <input type="text" id="f-closed" placeholder="例如：週日、國定假日" oninput="liveUpdate()">
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <div class="field-group-title">頁面文案</div>
+                        <div class="field">
+                            <label>首頁大標題（第一行）</label>
+                            <input type="text" id="f-h1a" placeholder="例如：線上掛號" oninput="liveUpdate()">
+                        </div>
+                        <div class="field">
+                            <label>首頁大標題（第二行）</label>
+                            <input type="text" id="f-h1b" placeholder="例如：預約平台" oninput="liveUpdate()">
+                        </div>
+                        <div class="field">
+                            <label>首頁說明文字</label>
+                            <textarea id="f-desc" placeholder="快速掛號、選擇醫師、預約時段，全程線上完成。" oninput="liveUpdate()"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <div class="field-group-title">Logo</div>
+                        <div class="logo-upload-area" onclick="document.getElementById('logoFile').click()">
+                            <p>點擊上傳 Logo 圖片</p>
+                            <p class="upload-hint">PNG / SVG 建議，最大 2MB</p>
+                            <img id="logoPreviewImg" style="display:none;">
+                        </div>
+                        <input type="file" id="logoFile" accept="image/*" style="display:none;" onchange="handleLogo(event)">
+                    </div>
+
+                </div>
+
+                <!-- TAB: 顏色風格 -->
+                <div class="tab-section" id="tab-style">
+
+                    <div class="field-group">
+                        <div class="field-group-title">快速套用色票</div>
+                        <div class="palette-row" id="paletteRow">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <div class="field-group-title">自訂顏色</div>
+
+                        <div class="field">
+                            <label>主色（文字、標題）</label>
+                            <div class="color-field">
+                                <div class="color-swatch" id="swatch-primary">
+                                    <input type="color" id="color-primary" value="#2C1810" oninput="syncColor('primary', this.value)">
+                                </div>
+                                <input type="text" class="color-hex" id="hex-primary" value="#2C1810" oninput="syncHex('primary', this.value)" maxlength="7">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label>強調色（按鈕、標籤）</label>
+                            <div class="color-field">
+                                <div class="color-swatch" id="swatch-accent">
+                                    <input type="color" id="color-accent" value="#D4704A" oninput="syncColor('accent', this.value)">
+                                </div>
+                                <input type="text" class="color-hex" id="hex-accent" value="#D4704A" oninput="syncHex('accent', this.value)" maxlength="7">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label>背景色</label>
+                            <div class="color-field">
+                                <div class="color-swatch" id="swatch-background">
+                                    <input type="color" id="color-background" value="#FAF8F5" oninput="syncColor('background', this.value)">
+                                </div>
+                                <input type="text" class="color-hex" id="hex-background" value="#FAF8F5" oninput="syncHex('background', this.value)" maxlength="7">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label>邊框 / 線條色</label>
+                            <div class="color-field">
+                                <div class="color-swatch" id="swatch-border">
+                                    <input type="color" id="color-border" value="#E8E3DB" oninput="syncColor('border', this.value)">
+                                </div>
+                                <input type="text" class="color-hex" id="hex-border" value="#E8E3DB" oninput="syncHex('border', this.value)" maxlength="7">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="apply-btn" onclick="applyColors()">套用顏色至預覽</button>
+                </div>
+
+                <!-- TAB: 服務內容 -->
+                <div class="tab-section" id="tab-content">
+                    <div class="field-group">
+                        <div class="field-group-title">服務項目（最多 4 項）</div>
+                        <div id="services-editor">
+                            <!-- Injected by JS -->
+                        </div>
+                        <button class="apply-btn" style="margin-top:16px;" onclick="applyServices()">更新服務內容</button>
+                    </div>
+
+                    <div class="field-group">
+                        <div class="field-group-title">注意事項</div>
+                        <textarea id="f-notes" rows="6" placeholder="每行一條注意事項，例如：&#10;請於預約時段前 10 分鐘報到&#10;攜帶健保卡及身分證件" oninput="liveUpdate()"></textarea>
+                    </div>
+
+                    <div class="field-group">
+                        <div class="field-group-title">確認訊息</div>
+                        <div class="field">
+                            <label>成功預約後顯示的文字</label>
+                            <textarea id="f-success-msg" placeholder="您的預約已確認，我們將以簡訊通知您。" oninput="liveUpdate()"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: 切換模板 -->
+                <div class="tab-section" id="tab-template">
+                    <div class="field-group">
+                        <div class="field-group-title">選擇模板類型</div>
+                        <p style="font-size:13px;color:var(--text-light);margin-bottom:20px;line-height:1.6;">切換模板後，已填入的基本資訊會保留，系統自動套用對應版型。</p>
+
+                        <div id="template-list">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /panel-body -->
+        </div>
+
+        <!-- Preview Area -->
+        <div class="preview-area">
+            <div class="preview-toolbar">
+                <div class="preview-label">即時預覽</div>
+                <div class="scale-btns">
+                    <button class="scale-btn active" onclick="setScale('desktop', this)">桌機</button>
+                    <button class="scale-btn" onclick="setScale('mobile', this)">手機</button>
+                </div>
+            </div>
+            <div class="preview-frame-wrap" id="previewWrap">
+                <div class="preview-shell" id="previewShell">
+                    <iframe id="previewFrame" title="預覽"></iframe>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Download Modal -->
+    <div class="modal" id="downloadModal">
+        <div class="modal-box">
+            <div class="modal-icon">↓</div>
+            <h2>下載專屬模板</h2>
+            <p>
+                您的客製化設定已套用完成。<br>
+                下載後的 HTML 檔案可直接在瀏覽器開啟，<br>
+                或上傳至任何靜態網站服務使用。
+            </p>
+            <div class="modal-actions">
+                <button class="modal-btn primary" onclick="doDownload()">下載 HTML 檔案</button>
+                <button class="modal-btn secondary" onclick="closeModal()">繼續編輯</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ─────────────────────────────────────────────────────────
+    // CONFIG
+    // ─────────────────────────────────────────────────────────
+    const TEMPLATES = [
+        { id: 'medical',     name: '醫療診所',   file: 'medical-appointment.html',     tag: '醫療診所' },
+        { id: 'beauty',      name: '美容美髮',   file: 'beauty-appointment.html',      tag: '美容美髮' },
+        { id: 'restaurant',  name: '餐廳訂位',   file: 'restaurant-appointment.html',  tag: '餐廳訂位' },
+        { id: 'fitness',     name: '健身運動',   file: 'fitness-appointment.html',     tag: '健身運動',    soon: true },
+        { id: 'education',   name: '教育培訓',   file: 'education-appointment.html',   tag: '教育培訓',    soon: true },
+        { id: 'consulting',  name: '專業服務',   file: 'consulting-appointment.html',  tag: '專業服務',    soon: true },
+    ];
+
+    const PALETTES = [
+        { name: '暖棕（預設）', colors: ['#2C1810','#D4704A','#FAF8F5','#E8E3DB'] },
+        { name: '深海藍',       colors: ['#0D2137','#3A7BD5','#F4F8FF','#D8E6F5'] },
+        { name: '森林綠',       colors: ['#1A2E1A','#4A8B6B','#F4FAF6','#C8E3D8'] },
+        { name: '玫瑰金',       colors: ['#2C1820','#C47A8A','#FDF6F7','#F0DDE2'] },
+        { name: '炭黑',         colors: ['#1A1A1A','#B0854A','#F5F3F0','#E0DAD2'] },
+        { name: '薰衣草',       colors: ['#2A1F3D','#8B6BD4','#F8F6FF','#E3DAFF'] },
+    ];
+
+    // ─────────────────────────────────────────────────────────
+    // STATE
+    // ─────────────────────────────────────────────────────────
+    let currentTemplate = TEMPLATES[0];
+    let currentHtml = '';
+    let isMobile = false;
+    let colors = {
+        primary: '#2C1810',
+        accent: '#D4704A',
+        background: '#FAF8F5',
+        border: '#E8E3DB'
+    };
+
+    const defaultServices = {
+        medical: [
+            { icon: '＋', name: '一般門診',     duration: '約 15 分鐘', price: 'NT$250' },
+            { icon: '◇', name: '健康檢查諮詢', duration: '約 30 分鐘', price: 'NT$500' },
+            { icon: '○', name: '慢性病回診',   duration: '約 20 分鐘', price: 'NT$350' },
+            { icon: '△', name: '預防接種',     duration: '約 10 分鐘', price: '依疫苗定價' },
+        ],
+        beauty: [
+            { icon: '—', name: '質感剪髮',   duration: '約 60 分鐘', price: 'NT$800' },
+            { icon: '◈', name: '單色染髮',   duration: '約 120 分鐘', price: 'NT$2,500起' },
+            { icon: '◇', name: '燙髮造型',   duration: '約 150 分鐘', price: 'NT$3,000起' },
+            { icon: '○', name: '頭皮護理療程', duration: '約 60 分鐘', price: 'NT$1,800' },
+        ],
+        restaurant: [
+            { icon: '內', name: '室內雅座', duration: '2 – 8 人', price: '免費訂位' },
+            { icon: '窗', name: '景觀窗邊', duration: '2 – 4 人', price: '免費訂位' },
+            { icon: '廂', name: '半開放包廂', duration: '4 – 10 人', price: '免費訂位' },
+            { icon: '外', name: '戶外露台', duration: '2 – 6 人', price: '免費訂位' },
+        ],
+    };
+
+    // ─────────────────────────────────────────────────────────
+    // INIT
+    // ─────────────────────────────────────────────────────────
+    function init() {
+        buildPalettes();
+        buildTemplateList();
+        buildServicesEditor();
+        loadTemplate(TEMPLATES[0]);
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // TEMPLATE LOADING
+    // ─────────────────────────────────────────────────────────
+    function loadTemplate(tmpl) {
+        currentTemplate = tmpl;
+        document.getElementById('currentTemplateName').textContent = tmpl.name;
+
+        // Mark active in list
+        document.querySelectorAll('.tmpl-card').forEach(c => {
+            c.classList.toggle('active', c.dataset.id === tmpl.id);
+        });
+
+        // Fetch the HTML file and inject into iframe
+        fetch(tmpl.file)
+            .then(r => {
+                if (!r.ok) throw new Error('not found');
+                return r.text();
+            })
+            .then(html => {
+                currentHtml = html;
+                buildServicesEditor();
+                renderPreview();
+            })
+            .catch(() => {
+                currentHtml = buildPlaceholderHtml(tmpl);
+                renderPreview();
+            });
+    }
+
+    function buildPlaceholderHtml(tmpl) {
+        return `<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8">
+        <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@700&family=Work+Sans&display=swap" rel="stylesheet">
+        <style>body{font-family:'Work Sans',sans-serif;background:#FAF8F5;display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;gap:16px;}
+        h1{font-family:'Crimson Pro',serif;font-size:48px;color:#2C1810;}p{color:#6B6B6B;font-size:16px;}</style>
+        </head><body><h1>${tmpl.name}模板</h1><p>即將推出 · Coming Soon</p></body></html>`;
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // LIVE PREVIEW RENDERING
+    // ─────────────────────────────────────────────────────────
+    let updateTimer = null;
+
+    function liveUpdate() {
+        clearTimeout(updateTimer);
+        updateTimer = setTimeout(renderPreview, 300);
+    }
+
+    function renderPreview() {
+        if (!currentHtml) return;
+        let html = currentHtml;
+
+        // Apply text substitutions
+        const subs = getSubstitutions();
+        Object.entries(subs).forEach(([key, val]) => {
+            if (val) html = html.split(key).join(val);
+        });
+
+        // Apply color overrides — inject a <style> override block
+        html = injectColorOverride(html);
+
+        // Write to iframe
+        const frame = document.getElementById('previewFrame');
+        const doc = frame.contentDocument || frame.contentWindow.document;
+        doc.open();
+        doc.write(html);
+        doc.close();
+    }
+
+    function getSubstitutions() {
+        const v = id => document.getElementById(id)?.value || '';
+        return {
+            // Medical defaults → user values
+            '仁愛家庭診所':           v('f-name')    || '仁愛家庭診所',
+            'LUMIÈRE 光感沙龍':       v('f-name')    || 'LUMIÈRE 光感沙龍',
+            '懷石 · 四季料理':        v('f-name')    || '懷石 · 四季料理',
+            '醫療診所 · 預約系統':    v('f-tagline') || '醫療診所 · 預約系統',
+            '美容美髮 · 預約系統':    v('f-tagline') || '美容美髮 · 預約系統',
+            '餐廳訂位 · 預約系統':    v('f-tagline') || '餐廳訂位 · 預約系統',
+            '週一至週六 08:30 – 20:00': v('f-hours') || '週一至週六 08:30 – 20:00',
+            '週二至週日 10:00 – 21:00': v('f-hours') || '週二至週日 10:00 – 21:00',
+            '午餐 11:30 – 14:30':     v('f-hours')  || '午餐 11:30 – 14:30',
+        };
+    }
+
+    function injectColorOverride(html) {
+        const override = `<style>
+            :root {
+                --primary: ${colors.primary} !important;
+                --accent: ${colors.accent} !important;
+                --background: ${colors.background} !important;
+                --border: ${colors.border} !important;
+            }
+        </style>`;
+        return html.replace('</head>', override + '</head>');
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // COLOR HANDLING
+    // ─────────────────────────────────────────────────────────
+    function syncColor(key, val) {
+        colors[key] = val;
+        document.getElementById('hex-' + key).value = val.toUpperCase();
+        document.getElementById('swatch-' + key).style.background = val;
+        liveUpdate();
+    }
+
+    function syncHex(key, val) {
+        if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+            colors[key] = val;
+            document.getElementById('color-' + key).value = val;
+            document.getElementById('swatch-' + key).style.background = val;
+            liveUpdate();
+        }
+    }
+
+    function applyColors() { renderPreview(); }
+
+    function buildPalettes() {
+        const row = document.getElementById('paletteRow');
+        row.innerHTML = PALETTES.map((p, i) => `
+            <div class="palette-chip ${i===0?'active':''}" title="${p.name}" onclick="applyPalette(${i}, this)">
+                ${p.colors.map(c => `<span style="background:${c}"></span>`).join('')}
+            </div>
+        `).join('');
+    }
+
+    function applyPalette(idx, el) {
+        document.querySelectorAll('.palette-chip').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        const [primary, accent, background, border] = PALETTES[idx].colors;
+        const keys = { primary, accent, background, border };
+        Object.entries(keys).forEach(([k, v]) => {
+            colors[k] = v;
+            document.getElementById('color-' + k).value = v;
+            document.getElementById('hex-' + k).value = v.toUpperCase();
+            document.getElementById('swatch-' + k).style.background = v;
+        });
+        renderPreview();
+    }
+
+    // Init swatch backgrounds
+    ['primary','accent','background','border'].forEach(k => {
+        document.getElementById('swatch-' + k).style.background = colors[k];
+    });
+
+    // ─────────────────────────────────────────────────────────
+    // SERVICES EDITOR
+    // ─────────────────────────────────────────────────────────
+    function buildServicesEditor() {
+        const tmplId = currentTemplate.id;
+        const svcs = defaultServices[tmplId] || defaultServices.medical;
+        const el = document.getElementById('services-editor');
+        el.innerHTML = svcs.map((s, i) => `
+            <div style="background:var(--background);border:1px solid var(--border);padding:14px 16px;margin-bottom:10px;">
+                <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-light);font-weight:600;margin-bottom:10px;">項目 ${i+1}</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <div class="field">
+                        <label>名稱</label>
+                        <input type="text" class="svc-name" data-idx="${i}" value="${s.name}" oninput="liveUpdate()">
+                    </div>
+                    <div class="field">
+                        <label>費用</label>
+                        <input type="text" class="svc-price" data-idx="${i}" value="${s.price}" oninput="liveUpdate()">
+                    </div>
+                    <div class="field" style="grid-column:1/-1;">
+                        <label>說明 / 時長</label>
+                        <input type="text" class="svc-duration" data-idx="${i}" value="${s.duration}" oninput="liveUpdate()">
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function applyServices() {
+        // Collect updated service values and patch into currentHtml
+        const names     = [...document.querySelectorAll('.svc-name')].map(e => e.value);
+        const prices    = [...document.querySelectorAll('.svc-price')].map(e => e.value);
+        const durations = [...document.querySelectorAll('.svc-duration')].map(e => e.value);
+        const tmplId = currentTemplate.id;
+        const orig = defaultServices[tmplId] || defaultServices.medical;
+
+        let html = currentHtml;
+        orig.forEach((s, i) => {
+            if (names[i]     && names[i] !== s.name)     html = html.split(s.name).join(names[i]);
+            if (prices[i]    && prices[i] !== s.price)   html = html.split(s.price).join(prices[i]);
+            if (durations[i] && durations[i] !== s.duration) html = html.split(s.duration).join(durations[i]);
+        });
+        currentHtml = html;
+        renderPreview();
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // TEMPLATE LIST
+    // ─────────────────────────────────────────────────────────
+    function buildTemplateList() {
+        const el = document.getElementById('template-list');
+        el.innerHTML = TEMPLATES.map(t => `
+            <div class="tmpl-card ${t.id === 'medical' ? 'active' : ''}" data-id="${t.id}"
+                style="display:flex;align-items:center;justify-content:space-between;padding:16px 18px;
+                border:1px solid var(--border);background:var(--card-bg);cursor:pointer;
+                margin-bottom:10px;transition:all 0.2s;"
+                onclick="selectTemplate('${t.id}')"
+                onmouseover="this.style.borderColor='var(--secondary)'"
+                onmouseout="this.style.borderColor=this.classList.contains('active')?'var(--accent)':'var(--border)'">
+                <div>
+                    <div style="font-family:'Crimson Pro',serif;font-size:18px;color:var(--primary);font-weight:600;">${t.name}</div>
+                    <div style="font-size:12px;color:var(--text-light);margin-top:2px;">${t.file}</div>
+                </div>
+                ${t.soon ? '<span style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-light);border:1px solid var(--border);padding:3px 8px;">即將推出</span>'
+                         : '<span style="font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent);font-weight:600;">可用</span>'}
+            </div>
+        `).join('');
+    }
+
+    function selectTemplate(id) {
+        const tmpl = TEMPLATES.find(t => t.id === id);
+        if (!tmpl || tmpl.soon) return;
+        loadTemplate(tmpl);
+        buildServicesEditor();
+        // Update active styles
+        document.querySelectorAll('.tmpl-card').forEach(c => {
+            const isActive = c.dataset.id === id;
+            c.classList.toggle('active', isActive);
+            c.style.borderColor = isActive ? 'var(--accent)' : 'var(--border)';
+            c.style.background = isActive ? 'rgba(212,112,74,0.03)' : 'var(--card-bg)';
+        });
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // LOGO
+    // ─────────────────────────────────────────────────────────
+    function handleLogo(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+            const img = document.getElementById('logoPreviewImg');
+            img.src = ev.target.result;
+            img.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // TAB SWITCHING
+    // ─────────────────────────────────────────────────────────
+    function switchTab(name, el) {
+        document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('tab-' + name).classList.add('active');
+        el.classList.add('active');
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // PREVIEW SCALE
+    // ─────────────────────────────────────────────────────────
+    function setScale(mode, btn) {
+        document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const shell = document.getElementById('previewShell');
+        if (mode === 'mobile') {
+            shell.classList.add('mobile-size');
+            isMobile = true;
+        } else {
+            shell.classList.remove('mobile-size');
+            isMobile = false;
+        }
+    }
+
+    function toggleMobile() {
+        const btn = document.querySelectorAll('.scale-btn')[isMobile ? 0 : 1];
+        setScale(isMobile ? 'desktop' : 'mobile', btn);
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // DOWNLOAD
+    // ─────────────────────────────────────────────────────────
+    function openDownloadModal() {
+        document.getElementById('downloadModal').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('downloadModal').classList.remove('active');
+    }
+
+    function doDownload() {
+        if (!currentHtml) return;
+
+        // Build final HTML with all substitutions + color overrides baked in
+        let html = currentHtml;
+        const subs = getSubstitutions();
+        Object.entries(subs).forEach(([k, v]) => { if (v) html = html.split(k).join(v); });
+
+        // Bake colors into :root instead of a separate override block
+        ['primary','accent','background','border'].forEach(k => {
+            const defaultVal = { primary:'#2C1810', accent:'#D4704A', background:'#FAF8F5', border:'#E8E3DB' }[k];
+            if (colors[k] !== defaultVal) {
+                html = html.replace(
+                    new RegExp(`--${k}:\\s*${defaultVal.replace('#','\\#')}`, 'g'),
+                    `--${k}: ${colors[k]}`
+                );
+            }
+        });
+
+        // Update title tag
+        const shopName = document.getElementById('f-name').value;
+        if (shopName) html = html.replace(/<title>.*?<\/title>/, `<title>${shopName} · 線上預約</title>`);
+
+        // Remove "返回模板列表" footer link (standalone use)
+        html = html.replace(/←\s*返回模板列表/g, '');
+
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = (shopName || currentTemplate.name) + '-預約系統.html';
+        a.click();
+        URL.revokeObjectURL(a.href);
+        closeModal();
+    }
+
+    document.getElementById('downloadModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+    // ─────────────────────────────────────────────────────────
+    // BOOT
+    // ─────────────────────────────────────────────────────────
+    init();
+
+    // Auto-select template from URL param e.g. ?template=beauty
+    const urlParam = new URLSearchParams(window.location.search).get('template');
+    if (urlParam) {
+        const match = TEMPLATES.find(t => t.id === urlParam);
+        if (match && !match.soon) {
+            setTimeout(() => selectTemplate(match.id), 100);
+        }
+    }
+    </script>
+</body>
+</html>

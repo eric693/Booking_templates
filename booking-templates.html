@@ -668,7 +668,7 @@
                 description: '專為美容、美髮、美甲等產業設計，支援多位設計師、服務項目管理。',
                 image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&h=600&fit=crop',
                 url: 'beauty-appointment.html',
-                ready: false,
+                ready: true,
                 driveUrl: ''
             },
             {
@@ -679,7 +679,7 @@
                 description: '線上訂位、桌位管理、候位通知，提升餐廳營運效率與客戶體驗。',
                 image: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&h=600&fit=crop',
                 url: 'restaurant-appointment.html',
-                ready: false,
+                ready: true,
                 driveUrl: ''
             },
             {
@@ -690,7 +690,7 @@
                 description: '團體課程、私人教練預約，會員管理與課程容量控制一應俱全。',
                 image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=600&fit=crop',
                 url: 'fitness-appointment.html',
-                ready: false,
+                ready: true,
                 driveUrl: ''
             },
             {
@@ -701,7 +701,7 @@
                 description: '適用於補習班、才藝班，支援線上報名、繳費、課程管理等功能。',
                 image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=600&fit=crop',
                 url: 'education-appointment.html',
-                ready: false,
+                ready: true,
                 driveUrl: ''
             },
             {
@@ -712,7 +712,7 @@
                 description: '法律、財務、心理諮詢等專業服務，提供安全的線上預約與視訊會議整合。',
                 image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=600&fit=crop',
                 url: 'consulting-appointment.html',
-                ready: false,
+                ready: true,
                 driveUrl: ''
             }
         ];
@@ -735,8 +735,11 @@
                         <h3 class="template-title">${template.title}</h3>
                         <p class="template-description">${template.description}</p>
                         <div class="template-actions">
-                            <a href="${template.url}" class="template-link" target="_blank">查看模板</a>
-                            ${template.driveUrl ? `<a href="${template.driveUrl}" class="template-link secondary" target="_blank">Drive</a>` : ''}
+                            ${template.ready
+                                ? `<a href="customize.html?template=${template.category}" class="template-link">立即客製化</a>
+                                   <a href="${template.url}" class="template-link secondary" target="_blank">預覽</a>`
+                                : `<span class="template-link secondary" style="cursor:default;opacity:0.5;">即將推出</span>`
+                            }
                         </div>
                     </div>
                 </article>

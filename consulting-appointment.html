@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>診所預約系統</title>
+    <title>顧問諮詢預約系統</title>
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -19,11 +19,7 @@
             --success-bg: #F0F7F4;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Work Sans', sans-serif;
@@ -39,7 +35,7 @@
             padding: 0 40px;
         }
 
-        /* Header */
+        /* ── Header ── */
         header {
             padding: 60px 0 50px;
             border-bottom: 1px solid var(--border);
@@ -50,6 +46,16 @@
             justify-content: space-between;
             align-items: flex-start;
             gap: 40px;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 8px;
+            animation: fadeInUp 0.8s ease-out 0.1s both;
         }
 
         .header-left h1 {
@@ -63,16 +69,6 @@
             margin-bottom: 12px;
         }
 
-        .header-subtitle {
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--accent);
-            font-weight: 600;
-            margin-bottom: 8px;
-            animation: fadeInUp 0.8s ease-out 0.1s both;
-        }
-
         .header-desc {
             font-size: 17px;
             color: var(--text-light);
@@ -82,15 +78,15 @@
             margin-top: 16px;
         }
 
-        .clinic-info-card {
+        .firm-info-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
             padding: 30px;
-            min-width: 260px;
+            min-width: 280px;
             animation: fadeInUp 0.8s ease-out 0.3s both;
         }
 
-        .clinic-info-card .label {
+        .firm-info-card .label {
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.12em;
@@ -98,15 +94,33 @@
             margin-bottom: 4px;
         }
 
-        .clinic-info-card .value {
+        .firm-info-card .value {
             font-size: 15px;
             color: var(--primary);
             font-weight: 500;
             margin-bottom: 18px;
         }
 
-        .clinic-info-card .value:last-child {
-            margin-bottom: 0;
+        .firm-info-card .value:last-child { margin-bottom: 0; }
+
+        .privacy-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-light);
+            background: var(--background);
+            border: 1px solid var(--border);
+            padding: 10px 12px;
+            margin-top: 16px;
+            line-height: 1.5;
+        }
+
+        .privacy-note::before {
+            content: '—';
+            color: var(--accent);
+            flex-shrink: 0;
+            font-weight: 700;
         }
 
         .status-badge {
@@ -122,24 +136,19 @@
         }
 
         .status-dot {
-            width: 6px;
-            height: 6px;
+            width: 6px; height: 6px;
             border-radius: 50%;
             background: var(--success);
             animation: pulse 2s infinite;
         }
 
-        /* Step Navigation */
+        /* ── Step Nav ── */
         .step-nav {
             padding: 40px 0 0;
             animation: fadeInUp 0.8s ease-out 0.4s both;
         }
 
-        .steps {
-            display: flex;
-            align-items: center;
-            gap: 0;
-        }
+        .steps { display: flex; align-items: center; }
 
         .step {
             display: flex;
@@ -149,41 +158,20 @@
         }
 
         .step-number {
-            width: 36px;
-            height: 36px;
+            width: 36px; height: 36px;
             border-radius: 50%;
             border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 600;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 600;
             color: var(--text-light);
             flex-shrink: 0;
             transition: all 0.3s ease;
         }
 
-        .step.active .step-number {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: white;
-        }
-
-        .step.completed .step-number {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
-
-        .step-label {
-            font-size: 14px;
-            color: var(--text-light);
-            font-weight: 500;
-        }
-
-        .step.active .step-label {
-            color: var(--primary);
-        }
+        .step.active .step-number  { background: var(--accent); border-color: var(--accent); color: white; }
+        .step.completed .step-number { background: var(--primary); border-color: var(--primary); color: white; }
+        .step-label { font-size: 14px; color: var(--text-light); font-weight: 500; }
+        .step.active .step-label { color: var(--primary); }
 
         .step-connector {
             flex: 0 0 60px;
@@ -192,7 +180,7 @@
             margin: 0 8px;
         }
 
-        /* Main layout */
+        /* ── Main Layout ── */
         .main-content {
             padding: 60px 0 100px;
             display: grid;
@@ -201,11 +189,9 @@
             align-items: start;
         }
 
-        /* Section title */
         .section-title {
             font-family: 'Crimson Pro', serif;
-            font-size: 32px;
-            font-weight: 600;
+            font-size: 32px; font-weight: 600;
             color: var(--primary);
             margin-bottom: 8px;
         }
@@ -216,177 +202,284 @@
             margin-bottom: 30px;
         }
 
-        /* Doctor Selection */
-        .doctors-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        .section-block {
             margin-bottom: 50px;
+            animation: fadeInUp 0.7s ease-out both;
         }
 
-        .doctor-card {
+        .section-block:nth-child(1) { animation-delay: 0.1s; }
+        .section-block:nth-child(2) { animation-delay: 0.2s; }
+        .section-block:nth-child(3) { animation-delay: 0.3s; }
+        .section-block:nth-child(4) { animation-delay: 0.4s; }
+        .section-block:nth-child(5) { animation-delay: 0.5s; }
+
+        /* ── Field Filter ── */
+        .field-filter {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .field-btn {
+            font-size: 13px;
+            padding: 7px 18px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.03em;
+        }
+
+        .field-btn.active, .field-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* ── Consultant Cards ── */
+        .consultants-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .consultant-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            padding: 24px;
+            display: grid;
+            grid-template-columns: 100px 1fr auto;
+            gap: 0;
+            overflow: hidden;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
         }
 
-        .doctor-card:hover {
+        .consultant-card:hover {
             border-color: var(--secondary);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(44, 24, 16, 0.06);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(44, 24, 16, 0.06);
         }
 
-        .doctor-card.selected {
+        .consultant-card.selected {
             border-color: var(--accent);
-            background: rgba(212, 112, 74, 0.03);
+            background: rgba(212, 112, 74, 0.02);
         }
 
-        .doctor-card.selected::after {
+        .consultant-card.selected::after {
             content: '✓';
             position: absolute;
-            top: 14px;
-            right: 14px;
-            width: 22px;
-            height: 22px;
+            top: 14px; right: 14px;
+            width: 22px; height: 22px;
             background: var(--accent);
             color: white;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700;
         }
 
-        .doctor-avatar {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin-bottom: 14px;
+        .consultant-photo {
+            width: 100px;
             background: var(--border);
-        }
-
-        .doctor-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .doctor-name {
-            font-family: 'Crimson Pro', serif;
-            font-size: 20px;
-            color: var(--primary);
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .doctor-specialty {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--accent);
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .doctor-meta {
-            font-size: 13px;
-            color: var(--text-light);
-            line-height: 1.6;
-        }
-
-        .doctor-availability {
-            display: flex;
-            gap: 4px;
-            margin-top: 12px;
-        }
-
-        .avail-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 2px;
-            background: var(--success-bg);
-            border: 1px solid #C8E3D8;
-        }
-
-        .avail-dot.busy {
-            background: #FFF0EB;
-            border-color: #F5C8B8;
-        }
-
-        /* Service Selection */
-        .services-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 50px;
-        }
-
-        .service-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 24px;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .service-item:hover {
-            border-color: var(--secondary);
-        }
-
-        .service-item.selected {
-            border-color: var(--accent);
-            background: rgba(212, 112, 74, 0.03);
-        }
-
-        .service-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .service-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--background);
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
+            overflow: hidden;
             flex-shrink: 0;
         }
 
-        .service-name {
-            font-weight: 500;
-            color: var(--primary);
-            font-size: 15px;
+        .consultant-photo img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
-        .service-duration {
+        .consultant-info {
+            padding: 22px 24px;
+            flex: 1;
+        }
+
+        .consultant-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .consultant-name {
+            font-family: 'Crimson Pro', serif;
+            font-size: 22px; font-weight: 600;
+            color: var(--primary);
+        }
+
+        .consultant-field {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .consultant-bio {
             font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .consultant-credentials {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .credential-tag {
+            font-size: 11px;
+            padding: 3px 10px;
+            background: var(--background);
+            border: 1px solid var(--border);
+            color: var(--text-light);
+            letter-spacing: 0.03em;
+        }
+
+        .consultant-meta {
+            padding: 22px 20px 22px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: space-between;
+            min-width: 120px;
+        }
+
+        .consultant-rate {
+            text-align: right;
+        }
+
+        .rate-price {
+            font-family: 'Crimson Pro', serif;
+            font-size: 22px; font-weight: 700;
+            color: var(--primary);
+        }
+
+        .rate-unit {
+            font-size: 11px;
             color: var(--text-light);
             margin-top: 2px;
         }
 
-        .service-price {
+        .consultant-availability {
+            text-align: right;
+        }
+
+        .avail-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .avail-count {
+            font-size: 13px;
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .avail-count.few { color: var(--accent); }
+
+        /* ── Session Type ── */
+        .session-types {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .session-type {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 22px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .session-type:hover { border-color: var(--secondary); }
+
+        .session-type.selected {
+            border-color: var(--accent);
+            background: rgba(212, 112, 74, 0.03);
+        }
+
+        .session-type.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 12px; right: 12px;
+            width: 20px; height: 20px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 700;
+        }
+
+        .session-icon {
+            width: 36px; height: 36px;
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 700;
+            color: var(--secondary);
             font-family: 'Crimson Pro', serif;
-            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .session-name {
+            font-size: 14px; font-weight: 600;
             color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .session-desc {
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .session-duration {
+            font-size: 12px;
+            color: var(--accent);
             font-weight: 600;
         }
 
-        /* Calendar */
-        .calendar-section {
-            margin-bottom: 50px;
+        /* ── Duration Toggle ── */
+        .duration-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
         }
+
+        .duration-btn {
+            padding: 10px 24px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text-light);
+            font-size: 13px; font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Work Sans', sans-serif;
+            letter-spacing: 0.03em;
+        }
+
+        .duration-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* ── Calendar ── */
+        .calendar-section { margin-bottom: 30px; }
 
         .calendar-header {
             display: flex;
@@ -395,37 +488,23 @@
             margin-bottom: 20px;
         }
 
-        .calendar-nav {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+        .calendar-nav { display: flex; align-items: center; gap: 20px; }
 
         .nav-btn {
             background: none;
             border: 1px solid var(--border);
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            color: var(--primary);
-            font-size: 16px;
+            color: var(--primary); font-size: 16px;
         }
 
-        .nav-btn:hover {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
+        .nav-btn:hover { background: var(--primary); border-color: var(--primary); color: white; }
 
         .current-month {
             font-family: 'Crimson Pro', serif;
-            font-size: 22px;
-            color: var(--primary);
-            font-weight: 600;
+            font-size: 22px; color: var(--primary); font-weight: 600;
         }
 
         .calendar-grid {
@@ -436,8 +515,7 @@
 
         .calendar-day-header {
             text-align: center;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 12px; font-weight: 600;
             color: var(--text-light);
             text-transform: uppercase;
             letter-spacing: 0.08em;
@@ -446,9 +524,7 @@
 
         .calendar-day {
             aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-size: 14px;
             border: 1px solid transparent;
             cursor: pointer;
@@ -465,48 +541,26 @@
         .calendar-day.has-slot::after {
             content: '';
             position: absolute;
-            bottom: 4px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            height: 4px;
+            bottom: 4px; left: 50%; transform: translateX(-50%);
+            width: 4px; height: 4px;
             border-radius: 50%;
             background: var(--accent);
         }
 
-        .calendar-day.selected {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
+        .calendar-day.selected { background: var(--primary); color: white; border-color: var(--primary); }
+        .calendar-day.today { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+        .calendar-day.disabled, .calendar-day.other-month { color: var(--border); cursor: default; }
 
-        .calendar-day.today {
-            border-color: var(--accent);
-            color: var(--accent);
-            font-weight: 600;
-        }
+        /* ── Time Slots ── */
+        .time-slots-section { margin-bottom: 50px; }
 
-        .calendar-day.disabled,
-        .calendar-day.other-month {
-            color: var(--border);
-            cursor: default;
-        }
-
-        /* Time Slots */
-        .time-slots-section {
-            margin-bottom: 50px;
-        }
-
-        .time-period {
-            margin-bottom: 24px;
-        }
+        .time-period { margin-bottom: 24px; }
 
         .time-period-label {
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.12em;
-            color: var(--text-light);
-            font-weight: 600;
+            color: var(--text-light); font-weight: 600;
             margin-bottom: 12px;
             padding-bottom: 8px;
             border-bottom: 1px solid var(--border);
@@ -521,8 +575,7 @@
         .time-slot {
             padding: 10px;
             text-align: center;
-            font-size: 13px;
-            font-weight: 500;
+            font-size: 13px; font-weight: 500;
             border: 1px solid var(--border);
             cursor: pointer;
             transition: all 0.2s ease;
@@ -530,29 +583,11 @@
             background: var(--card-bg);
         }
 
-        .time-slot:hover:not(.booked) {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
+        .time-slot:hover:not(.booked) { border-color: var(--accent); color: var(--accent); }
+        .time-slot.selected { background: var(--primary); border-color: var(--primary); color: white; }
+        .time-slot.booked { background: var(--background); color: var(--border); cursor: not-allowed; text-decoration: line-through; }
 
-        .time-slot.selected {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
-
-        .time-slot.booked {
-            background: var(--background);
-            color: var(--border);
-            cursor: not-allowed;
-            text-decoration: line-through;
-        }
-
-        /* Patient Form */
-        .patient-form {
-            margin-bottom: 50px;
-        }
-
+        /* ── Client Form ── */
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -560,21 +595,12 @@
             margin-bottom: 16px;
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .form-group.full {
-            grid-column: 1 / -1;
-        }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group.full { grid-column: 1 / -1; }
 
         .form-group label {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--primary);
-            letter-spacing: 0.03em;
+            font-size: 13px; font-weight: 500;
+            color: var(--primary); letter-spacing: 0.03em;
         }
 
         .form-group input,
@@ -583,8 +609,7 @@
             padding: 12px 14px;
             border: 1px solid var(--border);
             font-family: 'Work Sans', sans-serif;
-            font-size: 14px;
-            color: var(--text);
+            font-size: 14px; color: var(--text);
             background: var(--card-bg);
             transition: all 0.3s ease;
             outline: none;
@@ -592,25 +617,93 @@
 
         .form-group input:focus,
         .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: var(--accent);
-        }
+        .form-group textarea:focus { border-color: var(--accent); }
 
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
+        .form-group textarea { resize: vertical; min-height: 100px; }
         .form-group input::placeholder,
-        .form-group textarea::placeholder {
-            color: var(--border);
+        .form-group textarea::placeholder { color: var(--border); }
+
+        /* ── Confidentiality Notice ── */
+        .confidentiality-box {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            padding: 20px 24px;
+            margin-top: 24px;
         }
 
-        /* Sidebar - Booking Summary */
-        .sidebar {
-            position: sticky;
-            top: 30px;
+        .confidentiality-box h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--primary); font-weight: 600;
+            margin-bottom: 10px;
         }
+
+        .confidentiality-box p {
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* ── Meeting Mode ── */
+        .meeting-modes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .meeting-mode {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .meeting-mode:hover { border-color: var(--secondary); }
+
+        .meeting-mode.selected {
+            border-color: var(--accent);
+            background: rgba(212, 112, 74, 0.03);
+        }
+
+        .meeting-mode.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 12px; right: 12px;
+            width: 20px; height: 20px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 700;
+        }
+
+        .mode-label-tag {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .mode-name {
+            font-size: 15px; font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .mode-desc {
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar { position: sticky; top: 30px; }
 
         .summary-card {
             background: var(--card-bg);
@@ -621,9 +714,7 @@
 
         .summary-title {
             font-family: 'Crimson Pro', serif;
-            font-size: 24px;
-            color: var(--primary);
-            font-weight: 600;
+            font-size: 24px; color: var(--primary); font-weight: 600;
             margin-bottom: 24px;
             padding-bottom: 16px;
             border-bottom: 1px solid var(--border);
@@ -637,37 +728,24 @@
             gap: 12px;
         }
 
-        .summary-item:last-of-type {
-            margin-bottom: 0;
-        }
-
         .summary-label {
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            color: var(--text-light);
-            font-weight: 600;
+            color: var(--text-light); font-weight: 600;
             flex-shrink: 0;
         }
 
         .summary-value {
-            font-size: 14px;
-            color: var(--primary);
-            font-weight: 500;
+            font-size: 14px; color: var(--primary); font-weight: 500;
             text-align: right;
         }
 
         .summary-value.empty {
-            color: var(--border);
-            font-style: italic;
-            font-weight: 400;
+            color: var(--border); font-style: italic; font-weight: 400;
         }
 
-        .summary-divider {
-            height: 1px;
-            background: var(--border);
-            margin: 20px 0;
-        }
+        .summary-divider { height: 1px; background: var(--border); margin: 20px 0; }
 
         .summary-total {
             display: flex;
@@ -679,15 +757,12 @@
             font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            color: var(--text-light);
-            font-weight: 600;
+            color: var(--text-light); font-weight: 600;
         }
 
         .summary-total .price {
             font-family: 'Crimson Pro', serif;
-            font-size: 28px;
-            color: var(--primary);
-            font-weight: 700;
+            font-size: 28px; color: var(--primary); font-weight: 700;
         }
 
         .book-btn {
@@ -696,8 +771,7 @@
             background: var(--accent);
             color: var(--background);
             border: none;
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 15px; font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'Work Sans', sans-serif;
@@ -711,13 +785,6 @@
             box-shadow: 0 10px 30px rgba(44, 24, 16, 0.15);
         }
 
-        .book-btn:disabled {
-            background: var(--border);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
         .notes-card {
             background: var(--background);
             border: 1px solid var(--border);
@@ -728,83 +795,62 @@
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.12em;
-            color: var(--primary);
-            font-weight: 600;
+            color: var(--primary); font-weight: 600;
             margin-bottom: 12px;
         }
 
-        .notes-card ul {
-            list-style: none;
-        }
+        .notes-card ul { list-style: none; }
 
         .notes-card ul li {
-            font-size: 13px;
-            color: var(--text-light);
-            padding: 5px 0;
-            padding-left: 14px;
-            position: relative;
-            line-height: 1.5;
+            font-size: 13px; color: var(--text-light);
+            padding: 5px 0; padding-left: 14px;
+            position: relative; line-height: 1.5;
         }
 
-        .notes-card ul li::before {
-            content: '–';
-            position: absolute;
-            left: 0;
-            color: var(--accent);
-        }
+        .notes-card ul li::before { content: '–'; position: absolute; left: 0; color: var(--accent); }
 
-        /* Confirmation Modal */
+        /* ── Confirmation Modal ── */
         .modal {
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
             z-index: 1000;
-            justify-content: center;
-            align-items: center;
+            justify-content: center; align-items: center;
             backdrop-filter: blur(5px);
         }
 
-        .modal.active {
-            display: flex;
-        }
+        .modal.active { display: flex; }
 
         .modal-content {
             background: var(--card-bg);
             padding: 60px 50px;
-            max-width: 520px;
-            width: 90%;
+            max-width: 520px; width: 90%;
             animation: modalSlideIn 0.4s ease-out;
             text-align: center;
         }
 
         .confirm-icon {
-            width: 70px;
-            height: 70px;
+            width: 70px; height: 70px;
             border-radius: 50%;
             background: var(--success-bg);
             border: 2px solid #C8E3D8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Crimson Pro', serif;
+            font-size: 22px; font-weight: 700;
+            color: var(--success);
             margin: 0 auto 28px;
         }
 
         .modal-content h2 {
             font-family: 'Crimson Pro', serif;
-            font-size: 36px;
-            color: var(--primary);
+            font-size: 36px; color: var(--primary);
             margin-bottom: 12px;
         }
 
         .modal-content p {
             color: var(--text-light);
-            font-size: 15px;
-            line-height: 1.7;
+            font-size: 15px; line-height: 1.7;
             margin-bottom: 30px;
         }
 
@@ -824,18 +870,9 @@
             font-size: 14px;
         }
 
-        .confirm-detail-item:last-child {
-            border-bottom: none;
-        }
-
-        .confirm-detail-item .key {
-            color: var(--text-light);
-        }
-
-        .confirm-detail-item .val {
-            color: var(--primary);
-            font-weight: 500;
-        }
+        .confirm-detail-item:last-child { border-bottom: none; }
+        .confirm-detail-item .key { color: var(--text-light); }
+        .confirm-detail-item .val { color: var(--primary); font-weight: 500; }
 
         .confirm-btn {
             display: inline-block;
@@ -843,8 +880,7 @@
             background: var(--primary);
             color: var(--background);
             border: none;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 14px; font-weight: 600;
             cursor: pointer;
             font-family: 'Work Sans', sans-serif;
             letter-spacing: 0.05em;
@@ -852,91 +888,69 @@
             transition: all 0.3s ease;
         }
 
-        .confirm-btn:hover {
-            background: var(--accent);
-        }
+        .confirm-btn:hover { background: var(--accent); }
 
-        /* Footer */
+        /* ── Footer ── */
         footer {
             padding: 40px 0;
             border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .footer-inner {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: var(--text-light);
-            font-size: 13px;
         }
 
         .footer-back {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: var(--primary);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 500;
+            color: var(--primary); text-decoration: none;
+            font-size: 13px; font-weight: 500;
             letter-spacing: 0.05em;
             transition: color 0.3s ease;
         }
 
-        .footer-back:hover {
-            color: var(--accent);
-        }
+        .footer-back:hover { color: var(--accent); }
 
-        /* Animations */
+        /* ── Animations ── */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes modalSlideIn {
             from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+            to   { opacity: 1; transform: scale(1); }
         }
 
         @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
+            50%       { opacity: 0.4; }
         }
 
-        /* Animate sections on load */
-        .section-block {
-            animation: fadeInUp 0.7s ease-out both;
-        }
-        .section-block:nth-child(1) { animation-delay: 0.1s; }
-        .section-block:nth-child(2) { animation-delay: 0.2s; }
-        .section-block:nth-child(3) { animation-delay: 0.3s; }
-        .section-block:nth-child(4) { animation-delay: 0.4s; }
-
-        /* Responsive */
+        /* ── Responsive ── */
         @media (max-width: 900px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-            .sidebar {
-                position: static;
-                order: -1;
-            }
-            .header-top {
-                flex-direction: column;
-            }
-            .doctors-grid {
-                grid-template-columns: 1fr;
-            }
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            .step-connector {
-                flex: 0 0 30px;
-            }
+            .main-content { grid-template-columns: 1fr; }
+            .sidebar { position: static; order: -1; }
+            .header-top { flex-direction: column; }
+            .consultant-card { grid-template-columns: 80px 1fr; }
+            .consultant-meta { display: none; }
+            .session-types { grid-template-columns: 1fr; }
+            .meeting-modes { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .step-connector { flex: 0 0 30px; }
         }
 
         @media (max-width: 600px) {
             .container { padding: 0 20px; }
             .header-left h1 { font-size: 40px; }
-            .time-grid { grid-template-columns: repeat(3, 1fr); }
-            .steps { gap: 0; }
             .step-label { display: none; }
+            .time-grid { grid-template-columns: repeat(3, 1fr); }
+            .plans-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -946,23 +960,26 @@
         <div class="container">
             <div class="header-top">
                 <div class="header-left">
-                    <div class="header-subtitle">醫療診所 · 預約系統</div>
-                    <h1>線上掛號<br>預約平台</h1>
+                    <div class="header-subtitle">專業服務 · 諮詢預約</div>
+                    <h1>線上顧問<br>諮詢預約</h1>
                     <p class="header-desc">
-                        快速掛號、選擇醫師、預約時段，
-                        全程線上完成，節省您的等待時間。
+                        法律、財務、心理各領域專業顧問，
+                        安全保密的線上預約，支援視訊與實體會面。
                     </p>
                 </div>
-                <div class="clinic-info-card">
-                    <div class="label">診所名稱</div>
-                    <div class="value">仁愛家庭診所</div>
-                    <div class="label">門診時間</div>
-                    <div class="value">週一至週六 08:30 – 20:00</div>
+                <div class="firm-info-card">
+                    <div class="label">機構名稱</div>
+                    <div class="value">遠見聯合顧問事務所</div>
+                    <div class="label">服務時間</div>
+                    <div class="value">週一至週五 09:00 – 20:00</div>
                     <div class="label">當前狀態</div>
                     <div class="value">
                         <span class="status-badge">
                             <span class="status-dot"></span>接受預約中
                         </span>
+                    </div>
+                    <div class="privacy-note">
+                        所有諮詢內容依專業倫理守則全程保密，請放心填寫相關資料。
                     </div>
                 </div>
             </div>
@@ -971,12 +988,12 @@
                 <div class="steps">
                     <div class="step active" data-step="1">
                         <div class="step-number">1</div>
-                        <div class="step-label">選擇醫師</div>
+                        <div class="step-label">選擇顧問</div>
                     </div>
                     <div class="step-connector"></div>
                     <div class="step" data-step="2">
                         <div class="step-number">2</div>
-                        <div class="step-label">選擇服務</div>
+                        <div class="step-label">諮詢類型</div>
                     </div>
                     <div class="step-connector"></div>
                     <div class="step" data-step="3">
@@ -995,133 +1012,198 @@
 
     <div class="container">
         <div class="main-content">
-            <!-- Left: Form -->
             <div class="left-panel">
 
-                <!-- Step 1: Doctor Selection -->
-                <div class="section-block" id="section-doctor">
-                    <h2 class="section-title">選擇醫師</h2>
-                    <p class="section-subtitle">請選擇您希望看診的醫師</p>
-                    <div class="doctors-grid">
-                        <div class="doctor-card selected" onclick="selectDoctor(this, '林俊宏 醫師', '家庭醫學科', '250')" data-doctor="林俊宏 醫師" data-specialty="家庭醫學科">
-                            <div class="doctor-avatar">
-                                <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=100&h=100&fit=crop&crop=face" alt="林俊宏醫師">
+                <!-- Step 1: Consultant Selection -->
+                <div class="section-block">
+                    <h2 class="section-title">選擇顧問</h2>
+                    <p class="section-subtitle">請選擇您希望諮詢的專業顧問</p>
+
+                    <div class="field-filter">
+                        <button class="field-btn active" onclick="filterConsultants(this,'all')">全部</button>
+                        <button class="field-btn" onclick="filterConsultants(this,'legal')">法律</button>
+                        <button class="field-btn" onclick="filterConsultants(this,'finance')">財務</button>
+                        <button class="field-btn" onclick="filterConsultants(this,'psych')">心理</button>
+                        <button class="field-btn" onclick="filterConsultants(this,'business')">企業管理</button>
+                    </div>
+
+                    <div class="consultants-list" id="consultantsList">
+
+                        <div class="consultant-card selected" data-field="legal" onclick="selectConsultant(this,'陳威廷 律師','法律顧問',3000)">
+                            <div class="consultant-photo">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=300&fit=crop&crop=face" alt="陳威廷">
                             </div>
-                            <div class="doctor-name">林俊宏 醫師</div>
-                            <div class="doctor-specialty">家庭醫學科</div>
-                            <div class="doctor-meta">看診資歷 15 年<br>擅長慢性病管理、預防保健</div>
-                            <div class="doctor-availability">
-                                <span style="font-size:11px;color:var(--text-light);margin-right:6px;">本週空位</span>
-                                <div class="avail-dot"></div>
-                                <div class="avail-dot"></div>
-                                <div class="avail-dot busy"></div>
-                                <div class="avail-dot"></div>
-                                <div class="avail-dot"></div>
+                            <div class="consultant-info">
+                                <div class="consultant-field">法律顧問</div>
+                                <div class="consultant-name">陳威廷 律師</div>
+                                <div class="consultant-bio">執業 18 年，專精商業合約、勞資糾紛及不動產法律事務。曾任職知名律師事務所資深合夥律師，處理逾千件訴訟及仲裁案件。</div>
+                                <div class="consultant-credentials">
+                                    <span class="credential-tag">商業合約</span>
+                                    <span class="credential-tag">勞資糾紛</span>
+                                    <span class="credential-tag">不動產</span>
+                                    <span class="credential-tag">公司設立</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="doctor-card" onclick="selectDoctor(this, '陳雅玲 醫師', '內科', '280')" data-doctor="陳雅玲 醫師" data-specialty="內科">
-                            <div class="doctor-avatar">
-                                <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&h=100&fit=crop&crop=face" alt="陳雅玲醫師">
-                            </div>
-                            <div class="doctor-name">陳雅玲 醫師</div>
-                            <div class="doctor-specialty">內科</div>
-                            <div class="doctor-meta">看診資歷 12 年<br>擅長代謝疾病、腸胃科</div>
-                            <div class="doctor-availability">
-                                <span style="font-size:11px;color:var(--text-light);margin-right:6px;">本週空位</span>
-                                <div class="avail-dot busy"></div>
-                                <div class="avail-dot"></div>
-                                <div class="avail-dot"></div>
-                                <div class="avail-dot busy"></div>
-                                <div class="avail-dot"></div>
-                            </div>
-                        </div>
-                        <div class="doctor-card" onclick="selectDoctor(this, '王大明 醫師', '小兒科', '320')" data-doctor="王大明 醫師" data-specialty="小兒科">
-                            <div class="doctor-avatar">
-                                <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=100&h=100&fit=crop&crop=face" alt="王大明醫師">
-                            </div>
-                            <div class="doctor-name">王大明 醫師</div>
-                            <div class="doctor-specialty">小兒科</div>
-                            <div class="doctor-meta">看診資歷 18 年<br>擅長兒童發展、疫苗接種</div>
-                            <div class="doctor-availability">
-                                <span style="font-size:11px;color:var(--text-light);margin-right:6px;">本週空位</span>
-                                <div class="avail-dot"></div>
-                                <div class="avail-dot busy"></div>
-                                <div class="avail-dot"></div>
-                                <div class="avail-dot"></div>
-                                <div class="avail-dot busy"></div>
+                            <div class="consultant-meta">
+                                <div class="consultant-rate">
+                                    <div class="rate-price">NT$3,000</div>
+                                    <div class="rate-unit">/ 60 分鐘</div>
+                                </div>
+                                <div class="consultant-availability">
+                                    <div class="avail-label">本週空檔</div>
+                                    <div class="avail-count">6 個時段</div>
+                                </div>
                             </div>
                         </div>
-                        <div class="doctor-card" onclick="selectDoctor(this, '張惠芳 醫師', '婦科', '350')" data-doctor="張惠芳 醫師" data-specialty="婦科">
-                            <div class="doctor-avatar">
-                                <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=100&h=100&fit=crop&crop=face" alt="張惠芳醫師">
+
+                        <div class="consultant-card" data-field="finance" onclick="selectConsultant(this,'林雅芸 顧問','財務規劃顧問',2500)">
+                            <div class="consultant-photo">
+                                <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=300&fit=crop&crop=face" alt="林雅芸">
                             </div>
-                            <div class="doctor-name">張惠芳 醫師</div>
-                            <div class="doctor-specialty">婦科</div>
-                            <div class="doctor-meta">看診資歷 20 年<br>擅長婦科腫瘤、更年期醫學</div>
-                            <div class="doctor-availability">
-                                <span style="font-size:11px;color:var(--text-light);margin-right:6px;">本週空位</span>
-                                <div class="avail-dot busy"></div>
-                                <div class="avail-dot busy"></div>
-                                <div class="avail-dot"></div>
-                                <div class="avail-dot"></div>
-                                <div class="avail-dot"></div>
+                            <div class="consultant-info">
+                                <div class="consultant-field">財務規劃顧問</div>
+                                <div class="consultant-name">林雅芸 顧問</div>
+                                <div class="consultant-bio">CFP 國際認證理財規劃師，擅長退休規劃、資產配置與稅務籌劃。服務超過 500 個家庭與中小企業主，協助達成財務自由目標。</div>
+                                <div class="consultant-credentials">
+                                    <span class="credential-tag">退休規劃</span>
+                                    <span class="credential-tag">資產配置</span>
+                                    <span class="credential-tag">稅務籌劃</span>
+                                    <span class="credential-tag">CFP 認證</span>
+                                </div>
+                            </div>
+                            <div class="consultant-meta">
+                                <div class="consultant-rate">
+                                    <div class="rate-price">NT$2,500</div>
+                                    <div class="rate-unit">/ 60 分鐘</div>
+                                </div>
+                                <div class="consultant-availability">
+                                    <div class="avail-label">本週空檔</div>
+                                    <div class="avail-count">8 個時段</div>
+                                </div>
                             </div>
                         </div>
+
+                        <div class="consultant-card" data-field="psych" onclick="selectConsultant(this,'黃俊豪 心理師','臨床心理師',2800)">
+                            <div class="consultant-photo">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=300&fit=crop&crop=face" alt="黃俊豪">
+                            </div>
+                            <div class="consultant-info">
+                                <div class="consultant-field">臨床心理師</div>
+                                <div class="consultant-name">黃俊豪 心理師</div>
+                                <div class="consultant-bio">具執照臨床心理師，專注情緒管理、職場壓力及人際關係議題。採用認知行為治療（CBT）及正念療法，累積逾 3,000 小時個案諮詢經驗。</div>
+                                <div class="consultant-credentials">
+                                    <span class="credential-tag">情緒管理</span>
+                                    <span class="credential-tag">職場壓力</span>
+                                    <span class="credential-tag">CBT 療法</span>
+                                    <span class="credential-tag">正念療法</span>
+                                </div>
+                            </div>
+                            <div class="consultant-meta">
+                                <div class="consultant-rate">
+                                    <div class="rate-price">NT$2,800</div>
+                                    <div class="rate-unit">/ 50 分鐘</div>
+                                </div>
+                                <div class="consultant-availability">
+                                    <div class="avail-label">本週空檔</div>
+                                    <div class="avail-count few">3 個時段</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="consultant-card" data-field="business" onclick="selectConsultant(this,'吳佩珊 顧問','企業管理顧問',3500)">
+                            <div class="consultant-photo">
+                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=300&fit=crop&crop=face" alt="吳佩珊">
+                            </div>
+                            <div class="consultant-info">
+                                <div class="consultant-field">企業管理顧問</div>
+                                <div class="consultant-name">吳佩珊 顧問</div>
+                                <div class="consultant-bio">MBA，專精新創公司策略規劃、組織管理與市場進入策略。曾協助 30 家以上新創取得融資，並擔任多家上市公司獨立董事。</div>
+                                <div class="consultant-credentials">
+                                    <span class="credential-tag">新創策略</span>
+                                    <span class="credential-tag">組織管理</span>
+                                    <span class="credential-tag">市場分析</span>
+                                    <span class="credential-tag">融資輔導</span>
+                                </div>
+                            </div>
+                            <div class="consultant-meta">
+                                <div class="consultant-rate">
+                                    <div class="rate-price">NT$3,500</div>
+                                    <div class="rate-unit">/ 60 分鐘</div>
+                                </div>
+                                <div class="consultant-availability">
+                                    <div class="avail-label">本週空檔</div>
+                                    <div class="avail-count">5 個時段</div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
-                <!-- Step 2: Service Selection -->
-                <div class="section-block" id="section-service">
-                    <h2 class="section-title">選擇看診服務</h2>
-                    <p class="section-subtitle">請選擇此次就診的服務項目</p>
-                    <div class="services-list">
-                        <div class="service-item selected" onclick="selectService(this, '一般門診', '15 分鐘', '250')">
-                            <div class="service-left">
-                                <div class="service-icon">＋</div>
-                                <div>
-                                    <div class="service-name">一般門診</div>
-                                    <div class="service-duration">約 15 分鐘</div>
-                                </div>
-                            </div>
-                            <div class="service-price">NT$250</div>
+                <!-- Step 2: Session Type & Meeting Mode -->
+                <div class="section-block">
+                    <h2 class="section-title">諮詢類型與會面方式</h2>
+                    <p class="section-subtitle">請選擇諮詢性質與您偏好的會面模式</p>
+
+                    <div class="section-subtitle" style="margin-bottom:14px; font-size:13px; color:var(--primary); font-weight:600; text-transform:uppercase; letter-spacing:0.1em;">諮詢性質</div>
+                    <div class="session-types" style="margin-bottom:32px;">
+                        <div class="session-type selected" onclick="selectSessionType(this,'初次諮詢',60)">
+                            <div class="session-icon">I</div>
+                            <div class="session-name">初次諮詢</div>
+                            <div class="session-desc">首次了解需求，釐清問題方向與後續規劃</div>
+                            <div class="session-duration">60 分鐘</div>
                         </div>
-                        <div class="service-item" onclick="selectService(this, '健康檢查諮詢', '30 分鐘', '500')">
-                            <div class="service-left">
-                                <div class="service-icon">◇</div>
-                                <div>
-                                    <div class="service-name">健康檢查諮詢</div>
-                                    <div class="service-duration">約 30 分鐘</div>
-                                </div>
-                            </div>
-                            <div class="service-price">NT$500</div>
+                        <div class="session-type" onclick="selectSessionType(this,'持續諮詢',60)">
+                            <div class="session-icon">II</div>
+                            <div class="session-name">持續諮詢</div>
+                            <div class="session-desc">延續前次議題，深入分析與解決方案執行</div>
+                            <div class="session-duration">60 分鐘</div>
                         </div>
-                        <div class="service-item" onclick="selectService(this, '慢性病回診', '20 分鐘', '350')">
-                            <div class="service-left">
-                                <div class="service-icon">○</div>
-                                <div>
-                                    <div class="service-name">慢性病回診</div>
-                                    <div class="service-duration">約 20 分鐘</div>
-                                </div>
-                            </div>
-                            <div class="service-price">NT$350</div>
+                        <div class="session-type" onclick="selectSessionType(this,'緊急諮詢',30)">
+                            <div class="session-icon">!</div>
+                            <div class="session-name">緊急諮詢</div>
+                            <div class="session-desc">緊急事件快速釐清，優先排入最近時段</div>
+                            <div class="session-duration">30 分鐘</div>
                         </div>
-                        <div class="service-item" onclick="selectService(this, '預防接種', '10 分鐘', '依疫苗定價')">
-                            <div class="service-left">
-                                <div class="service-icon">△</div>
-                                <div>
-                                    <div class="service-name">預防接種</div>
-                                    <div class="service-duration">約 10 分鐘</div>
-                                </div>
-                            </div>
-                            <div class="service-price" style="font-size:14px;">依疫苗定價</div>
+                    </div>
+
+                    <div class="section-subtitle" style="margin-bottom:14px; font-size:13px; color:var(--primary); font-weight:600; text-transform:uppercase; letter-spacing:0.1em;">諮詢時長</div>
+                    <div class="duration-row" style="margin-bottom:32px;">
+                        <button class="duration-btn active" onclick="selectDuration(this, 30, 0.6)">30 分鐘</button>
+                        <button class="duration-btn" onclick="selectDuration(this, 60, 1)">60 分鐘</button>
+                        <button class="duration-btn" onclick="selectDuration(this, 90, 1.4)">90 分鐘</button>
+                        <button class="duration-btn" onclick="selectDuration(this, 120, 1.8)">120 分鐘</button>
+                    </div>
+
+                    <div class="section-subtitle" style="margin-bottom:14px; font-size:13px; color:var(--primary); font-weight:600; text-transform:uppercase; letter-spacing:0.1em;">會面方式</div>
+                    <div class="meeting-modes">
+                        <div class="meeting-mode selected" onclick="selectMeetingMode(this,'視訊會議')">
+                            <div class="mode-label-tag">線上</div>
+                            <div class="mode-name">視訊會議</div>
+                            <div class="mode-desc">Google Meet / Zoom，確認後系統自動發送會議連結至您的信箱</div>
+                        </div>
+                        <div class="meeting-mode" onclick="selectMeetingMode(this,'電話諮詢')">
+                            <div class="mode-label-tag">線上</div>
+                            <div class="mode-name">電話諮詢</div>
+                            <div class="mode-desc">由顧問於預約時間致電，適合不方便視訊的情況</div>
+                        </div>
+                        <div class="meeting-mode" onclick="selectMeetingMode(this,'事務所面談')">
+                            <div class="mode-label-tag">實體</div>
+                            <div class="mode-name">事務所面談</div>
+                            <div class="mode-desc">台北市信義區辦公室，提供舒適且保密的面談環境</div>
+                        </div>
+                        <div class="meeting-mode" onclick="selectMeetingMode(this,'外出服務')">
+                            <div class="mode-label-tag">實體</div>
+                            <div class="mode-name">外出服務</div>
+                            <div class="mode-desc">顧問前往您指定地點，適合企業客戶，另計差旅費用</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Step 3: Calendar & Time -->
-                <div class="section-block" id="section-time">
-                    <h2 class="section-title">選擇看診時間</h2>
-                    <p class="section-subtitle">請選擇方便的日期與時間</p>
+                <div class="section-block">
+                    <h2 class="section-title">選擇諮詢時間</h2>
+                    <p class="section-subtitle">請選擇方便的日期與時段</p>
 
                     <div class="calendar-section">
                         <div class="calendar-header">
@@ -1137,116 +1219,131 @@
                     <div class="time-slots-section" id="timeSlotsSection" style="display:none;">
                         <p class="section-subtitle" id="selectedDateLabel"></p>
                         <div class="time-period">
-                            <div class="time-period-label">上午診 Morning</div>
+                            <div class="time-period-label">上午 Morning</div>
                             <div class="time-grid">
-                                <div class="time-slot" onclick="selectTime(this, '08:30')">08:30</div>
-                                <div class="time-slot booked">09:00</div>
-                                <div class="time-slot" onclick="selectTime(this, '09:30')">09:30</div>
-                                <div class="time-slot" onclick="selectTime(this, '10:00')">10:00</div>
-                                <div class="time-slot booked">10:30</div>
-                                <div class="time-slot" onclick="selectTime(this, '11:00')">11:00</div>
-                                <div class="time-slot booked">11:30</div>
-                                <div class="time-slot" onclick="selectTime(this, '12:00')">12:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'09:00')">09:00</div>
+                                <div class="time-slot booked">09:30</div>
+                                <div class="time-slot" onclick="selectTime(this,'10:00')">10:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'10:30')">10:30</div>
+                                <div class="time-slot booked">11:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'11:30')">11:30</div>
                             </div>
                         </div>
                         <div class="time-period">
-                            <div class="time-period-label">下午診 Afternoon</div>
+                            <div class="time-period-label">下午 Afternoon</div>
                             <div class="time-grid">
-                                <div class="time-slot" onclick="selectTime(this, '14:00')">14:00</div>
-                                <div class="time-slot" onclick="selectTime(this, '14:30')">14:30</div>
-                                <div class="time-slot booked">15:00</div>
-                                <div class="time-slot" onclick="selectTime(this, '15:30')">15:30</div>
-                                <div class="time-slot" onclick="selectTime(this, '16:00')">16:00</div>
-                                <div class="time-slot booked">16:30</div>
-                                <div class="time-slot" onclick="selectTime(this, '17:00')">17:00</div>
-                                <div class="time-slot" onclick="selectTime(this, '17:30')">17:30</div>
+                                <div class="time-slot" onclick="selectTime(this,'13:30')">13:30</div>
+                                <div class="time-slot" onclick="selectTime(this,'14:00')">14:00</div>
+                                <div class="time-slot booked">14:30</div>
+                                <div class="time-slot" onclick="selectTime(this,'15:00')">15:00</div>
+                                <div class="time-slot booked">15:30</div>
+                                <div class="time-slot" onclick="selectTime(this,'16:00')">16:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'16:30')">16:30</div>
+                                <div class="time-slot booked">17:00</div>
                             </div>
                         </div>
                         <div class="time-period">
-                            <div class="time-period-label">晚診 Evening</div>
+                            <div class="time-period-label">晚間 Evening</div>
                             <div class="time-grid">
-                                <div class="time-slot" onclick="selectTime(this, '18:30')">18:30</div>
+                                <div class="time-slot" onclick="selectTime(this,'18:00')">18:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'18:30')">18:30</div>
                                 <div class="time-slot booked">19:00</div>
-                                <div class="time-slot" onclick="selectTime(this, '19:30')">19:30</div>
-                                <div class="time-slot" onclick="selectTime(this, '20:00')">20:00</div>
+                                <div class="time-slot" onclick="selectTime(this,'19:30')">19:30</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Step 4: Patient Info -->
-                <div class="section-block" id="section-patient">
-                    <h2 class="section-title">填寫病患資料</h2>
-                    <p class="section-subtitle">請提供您的基本資訊，我們將保障您的隱私安全</p>
-                    <div class="patient-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>姓名 *</label>
-                                <input type="text" placeholder="請輸入真實姓名" id="patientName" oninput="updateSummary()">
-                            </div>
-                            <div class="form-group">
-                                <label>身分證字號 *</label>
-                                <input type="text" placeholder="A123456789">
-                            </div>
+                <!-- Step 4: Client Info -->
+                <div class="section-block">
+                    <h2 class="section-title">填寫委託人資料</h2>
+                    <p class="section-subtitle">請提供您的基本資訊，所有資料均依保密原則處理</p>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>姓名 *</label>
+                            <input type="text" placeholder="請輸入真實姓名" id="clientName" oninput="updateSummary()">
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>出生日期 *</label>
-                                <input type="date">
-                            </div>
-                            <div class="form-group">
-                                <label>性別 *</label>
-                                <select>
-                                    <option value="">請選擇</option>
-                                    <option>男</option>
-                                    <option>女</option>
-                                    <option>其他</option>
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label>手機號碼 *</label>
+                            <input type="tel" placeholder="0912-345-678" id="clientPhone" oninput="updateSummary()">
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>手機號碼 *</label>
-                                <input type="tel" placeholder="0912-345-678" id="patientPhone" oninput="updateSummary()">
-                            </div>
-                            <div class="form-group">
-                                <label>電子信箱</label>
-                                <input type="email" placeholder="example@mail.com">
-                            </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>電子信箱 *</label>
+                            <input type="email" placeholder="接收預約確認與視訊連結">
                         </div>
-                        <div class="form-row">
-                            <div class="form-group full">
-                                <label>健保卡號</label>
-                                <input type="text" placeholder="若有健保請填寫">
-                            </div>
+                        <div class="form-group">
+                            <label>身份</label>
+                            <select>
+                                <option value="">請選擇</option>
+                                <option>個人委託</option>
+                                <option>企業委託（請填公司名稱）</option>
+                                <option>非營利組織</option>
+                            </select>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group full">
-                                <label>主要症狀或就診原因</label>
-                                <textarea placeholder="請簡短描述您的症狀或此次就診的主要原因，有助於醫師做好準備…"></textarea>
-                            </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full">
+                            <label>諮詢主題概述 *</label>
+                            <textarea placeholder="請簡要說明您希望諮詢的主要問題或背景，有助於顧問提前準備相關資料，提升諮詢效率。此欄位內容受保密協議保護。"></textarea>
                         </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>是否曾與本所諮詢</label>
+                            <select>
+                                <option value="">請選擇</option>
+                                <option>否（首次諮詢）</option>
+                                <option>是（請填寫案件編號）</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>如何得知本服務</label>
+                            <select>
+                                <option value="">請選擇（選填）</option>
+                                <option>網路搜尋</option>
+                                <option>親友推薦</option>
+                                <option>社群媒體</option>
+                                <option>活動 / 講座</option>
+                                <option>其他</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="confidentiality-box">
+                        <h4>保密聲明</h4>
+                        <p>本事務所依據專業倫理守則，對所有諮詢內容負有嚴格保密義務。您所填寫的任何資料，未經您的明確同意，絕不對外揭露。視訊會議採用端對端加密，所有資料傳輸符合個人資料保護法相關規定。</p>
                     </div>
                 </div>
 
-            </div>
+            </div><!-- /left-panel -->
 
-            <!-- Right: Sidebar -->
+            <!-- Sidebar -->
             <div class="sidebar">
                 <div class="summary-card">
                     <div class="summary-title">預約摘要</div>
 
                     <div class="summary-item">
-                        <div class="summary-label">醫師</div>
-                        <div class="summary-value" id="sum-doctor">林俊宏 醫師</div>
+                        <div class="summary-label">顧問</div>
+                        <div class="summary-value" id="sum-consultant">陳威廷 律師</div>
                     </div>
                     <div class="summary-item">
-                        <div class="summary-label">科別</div>
-                        <div class="summary-value" id="sum-specialty">家庭醫學科</div>
+                        <div class="summary-label">專業領域</div>
+                        <div class="summary-value" id="sum-field">法律顧問</div>
                     </div>
                     <div class="summary-item">
-                        <div class="summary-label">服務項目</div>
-                        <div class="summary-value" id="sum-service">一般門診</div>
+                        <div class="summary-label">諮詢類型</div>
+                        <div class="summary-value" id="sum-session">初次諮詢</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">時長</div>
+                        <div class="summary-value" id="sum-duration">30 分鐘</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">會面方式</div>
+                        <div class="summary-value" id="sum-mode">視訊會議</div>
                     </div>
                     <div class="summary-item">
                         <div class="summary-label">日期</div>
@@ -1257,51 +1354,52 @@
                         <div class="summary-value empty" id="sum-time">請選擇時間</div>
                     </div>
                     <div class="summary-item">
-                        <div class="summary-label">病患</div>
-                        <div class="summary-value empty" id="sum-patient">請填寫資料</div>
+                        <div class="summary-label">委託人</div>
+                        <div class="summary-value empty" id="sum-client">請填寫資料</div>
                     </div>
 
                     <div class="summary-divider"></div>
 
                     <div class="summary-total">
-                        <div class="label">掛號費用</div>
-                        <div class="price" id="sum-price">NT$250</div>
+                        <div class="label">諮詢費用</div>
+                        <div class="price" id="sum-price">NT$1,800</div>
                     </div>
                 </div>
 
-                <button class="book-btn" onclick="submitBooking()" id="bookBtn">
-                    確認預約
-                </button>
+                <button class="book-btn" onclick="submitBooking()">確認預約</button>
 
                 <div style="height: 20px;"></div>
 
                 <div class="notes-card">
                     <h4>注意事項</h4>
                     <ul>
-                        <li>請於預約時段前 10 分鐘報到</li>
-                        <li>攜帶健保卡及身分證件</li>
-                        <li>如需取消請提前 2 小時通知</li>
-                        <li>初診患者請提早 15 分鐘填寫病歷</li>
-                        <li>發燒超過 38°C 請先電話告知</li>
+                        <li>確認後 24 小時內發送預約通知</li>
+                        <li>視訊連結於諮詢前 30 分鐘寄出</li>
+                        <li>需取消請提前 24 小時告知</li>
+                        <li>逾時 15 分鐘視同放棄，費用不退</li>
+                        <li>如需攜帶文件，請事先以信件寄送</li>
                     </ul>
                 </div>
             </div>
+
         </div>
     </div>
 
     <footer>
-        <div class="container" style="display:flex;justify-content:space-between;align-items:center;width:100%;">
-            <a href="booking-templates.html" class="footer-back">← 返回模板列表</a>
-            <span>© 2024 診所預約系統 · 醫療診所模板</span>
+        <div class="container">
+            <div class="footer-inner">
+                <a href="booking-templates.html" class="footer-back">← 返回模板列表</a>
+                <span>© 2024 顧問諮詢預約系統 · 專業服務模板</span>
+            </div>
         </div>
     </footer>
 
     <!-- Confirmation Modal -->
     <div class="modal" id="confirmModal">
         <div class="modal-content">
-            <div class="confirm-icon">✓</div>
+            <div class="confirm-icon">ok</div>
             <h2>預約成功！</h2>
-            <p>您的掛號預約已確認，<br>我們將以簡訊通知您看診提醒。</p>
+            <p>您的諮詢預約已確認，<br>我們將於 24 小時內寄送確認通知與後續資訊。</p>
             <div class="confirm-details" id="confirmDetails"></div>
             <button class="confirm-btn" onclick="closeConfirm()">完成</button>
         </div>
@@ -1310,38 +1408,73 @@
     <script>
         // ─── State ───────────────────────────────────────────
         const state = {
-            doctor: '林俊宏 醫師',
-            specialty: '家庭醫學科',
-            service: '一般門診',
-            duration: '15 分鐘',
-            price: 'NT$250',
+            consultant: '陳威廷 律師',
+            field: '法律顧問',
+            session: '初次諮詢',
+            duration: 30,
+            durationMultiplier: 0.6,
+            baseRate: 3000,
+            mode: '視訊會議',
             date: null,
             time: null,
-            patient: null
+            client: null
         };
 
-        // ─── Doctor Selection ─────────────────────────────────
-        function selectDoctor(el, name, specialty, price) {
-            document.querySelectorAll('.doctor-card').forEach(c => c.classList.remove('selected'));
+        function calcPrice() {
+            return Math.round(state.baseRate * state.durationMultiplier);
+        }
+
+        function refreshPrice() {
+            document.getElementById('sum-price').textContent = 'NT$' + calcPrice().toLocaleString();
+            document.getElementById('sum-duration').textContent = state.duration + ' 分鐘';
+        }
+
+        // ─── Consultant Filter ─────────────────────────────────
+        function filterConsultants(btn, field) {
+            document.querySelectorAll('.field-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.consultant-card').forEach(c => {
+                c.style.display = (field === 'all' || c.dataset.field === field) ? 'grid' : 'none';
+            });
+        }
+
+        // ─── Consultant Select ─────────────────────────────────
+        function selectConsultant(el, name, field, rate) {
+            document.querySelectorAll('.consultant-card').forEach(c => c.classList.remove('selected'));
             el.classList.add('selected');
-            state.doctor = name;
-            state.specialty = specialty;
-            document.getElementById('sum-doctor').textContent = name;
-            document.getElementById('sum-doctor').classList.remove('empty');
-            document.getElementById('sum-specialty').textContent = specialty;
+            state.consultant = name;
+            state.field = field;
+            state.baseRate = rate;
+            document.getElementById('sum-consultant').textContent = name;
+            document.getElementById('sum-field').textContent = field;
+            refreshPrice();
             updateStepIndicator(1);
         }
 
-        // ─── Service Selection ────────────────────────────────
-        function selectService(el, name, duration, price) {
-            document.querySelectorAll('.service-item').forEach(s => s.classList.remove('selected'));
+        // ─── Session Type ──────────────────────────────────────
+        function selectSessionType(el, name, defaultDuration) {
+            document.querySelectorAll('.session-type').forEach(s => s.classList.remove('selected'));
             el.classList.add('selected');
-            state.service = name;
-            state.price = 'NT$' + price.replace('NT$', '');
-            document.getElementById('sum-service').textContent = name;
-            document.getElementById('sum-service').classList.remove('empty');
-            document.getElementById('sum-price').textContent = state.price.startsWith('NT$') ? state.price : 'NT$' + price;
+            state.session = name;
+            document.getElementById('sum-session').textContent = name;
             updateStepIndicator(2);
+        }
+
+        // ─── Duration ─────────────────────────────────────────
+        function selectDuration(btn, minutes, multiplier) {
+            document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            state.duration = minutes;
+            state.durationMultiplier = multiplier;
+            refreshPrice();
+        }
+
+        // ─── Meeting Mode ──────────────────────────────────────
+        function selectMeetingMode(el, mode) {
+            document.querySelectorAll('.meeting-mode').forEach(m => m.classList.remove('selected'));
+            el.classList.add('selected');
+            state.mode = mode;
+            document.getElementById('sum-mode').textContent = mode;
         }
 
         // ─── Calendar ─────────────────────────────────────────
@@ -1356,41 +1489,31 @@
 
             const grid = document.getElementById('calendarGrid');
             const today = new Date();
-
             let html = days.map(d => `<div class="calendar-day-header">${d}</div>`).join('');
 
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             const prevDays = new Date(year, month, 0).getDate();
 
-            // Prev month padding
-            for (let i = firstDay - 1; i >= 0; i--) {
+            for (let i = firstDay - 1; i >= 0; i--)
                 html += `<div class="calendar-day other-month">${prevDays - i}</div>`;
-            }
 
-            // Slots on random days for demo
-            const slotDays = [3,5,6,9,10,12,13,16,17,19,20,23,24,26,27];
+            const slotDays = [2,3,5,8,9,10,12,15,16,17,19,22,23,24,26,29,30];
 
             for (let d = 1; d <= daysInMonth; d++) {
                 const date = new Date(year, month, d);
                 const isToday = date.toDateString() === today.toDateString();
                 const isPast = date < today && !isToday;
-                const isSunday = date.getDay() === 0;
-                const hasSlot = slotDays.includes(d) && !isPast && !isSunday;
-                const classes = [
-                    'calendar-day',
-                    isToday ? 'today' : '',
-                    isPast || isSunday ? 'disabled' : '',
-                    hasSlot ? 'has-slot' : ''
-                ].filter(Boolean).join(' ');
-                const onclick = (!isPast && !isSunday) ? `onclick="selectDate(this, ${year}, ${month}, ${d})"` : '';
+                const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+                const hasSlot = slotDays.includes(d) && !isPast && !isWeekend;
+                const classes = ['calendar-day', isToday?'today':'', isPast||isWeekend?'disabled':'', hasSlot?'has-slot':''].filter(Boolean).join(' ');
+                const onclick = (!isPast && !isWeekend) ? `onclick="selectDate(this,${year},${month},${d})"` : '';
                 html += `<div class="${classes}" ${onclick}>${d}</div>`;
             }
 
-            const remaining = (7 - (firstDay + daysInMonth) % 7) % 7;
-            for (let d = 1; d <= remaining; d++) {
+            const rem = (7 - (firstDay + daysInMonth) % 7) % 7;
+            for (let d = 1; d <= rem; d++)
                 html += `<div class="calendar-day other-month">${d}</div>`;
-            }
 
             grid.innerHTML = html;
         }
@@ -1411,36 +1534,33 @@
             document.getElementById('selectedDateLabel').textContent = `${state.date} 週${weekdays[d.getDay()]} 可預約時段`;
             document.getElementById('timeSlotsSection').style.display = 'block';
             updateStepIndicator(3);
-            // Reset time
             document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
             state.time = null;
             document.getElementById('sum-time').textContent = '請選擇時間';
             document.getElementById('sum-time').classList.add('empty');
         }
 
-        // ─── Time Slot ────────────────────────────────────────
+        // ─── Time ────────────────────────────────────────────
         function selectTime(el, time) {
             document.querySelectorAll('.time-slot:not(.booked)').forEach(s => s.classList.remove('selected'));
             el.classList.add('selected');
             state.time = time;
             document.getElementById('sum-time').textContent = time;
             document.getElementById('sum-time').classList.remove('empty');
-            updateStepIndicator(3);
         }
 
-        // ─── Patient / Summary update ─────────────────────────
+        // ─── Client Summary ───────────────────────────────────
         function updateSummary() {
-            const name = document.getElementById('patientName').value;
-            const phone = document.getElementById('patientPhone').value;
+            const name = document.getElementById('clientName').value;
+            const phone = document.getElementById('clientPhone').value;
             if (name) {
-                state.patient = name + (phone ? ` · ${phone}` : '');
-                document.getElementById('sum-patient').textContent = state.patient;
-                document.getElementById('sum-patient').classList.remove('empty');
+                document.getElementById('sum-client').textContent = name + (phone ? ` · ${phone}` : '');
+                document.getElementById('sum-client').classList.remove('empty');
                 updateStepIndicator(4);
             }
         }
 
-        // ─── Step indicator ───────────────────────────────────
+        // ─── Step Indicator ───────────────────────────────────
         function updateStepIndicator(upTo) {
             document.querySelectorAll('.step').forEach((s, i) => {
                 s.classList.remove('active', 'completed');
@@ -1451,19 +1571,21 @@
 
         // ─── Submit ───────────────────────────────────────────
         function submitBooking() {
-            const name = document.getElementById('patientName').value;
+            const name = document.getElementById('clientName').value;
             if (!state.date || !state.time || !name) {
                 alert('請完整填寫預約資訊（日期、時間、姓名）');
                 return;
             }
             const details = document.getElementById('confirmDetails');
             details.innerHTML = [
-                ['醫師', state.doctor + '（' + state.specialty + '）'],
-                ['服務', state.service],
+                ['顧問', state.consultant + '（' + state.field + '）'],
+                ['諮詢類型', state.session],
+                ['時長', state.duration + ' 分鐘'],
+                ['會面方式', state.mode],
                 ['日期', state.date],
                 ['時間', state.time],
-                ['病患', name],
-                ['費用', document.getElementById('sum-price').textContent]
+                ['委託人', name],
+                ['費用', 'NT$' + calcPrice().toLocaleString()]
             ].map(([k,v]) => `<div class="confirm-detail-item"><span class="key">${k}</span><span class="val">${v}</span></div>`).join('');
             document.getElementById('confirmModal').classList.add('active');
         }
@@ -1477,6 +1599,7 @@
         });
 
         // ─── Init ─────────────────────────────────────────────
+        refreshPrice();
         renderCalendar();
     </script>
 </body>
