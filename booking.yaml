@@ -1,0 +1,254 @@
+# ============================================================
+# 預約系統客戶需求表單 v1.0
+# ============================================================
+
+# ── 基本資訊 ────────────────────────────────────────────
+business:
+  # 店家/診所/餐廳名稱（必填）
+  name: "仁愛家庭診所"
+  
+  # 產業類型（必填）
+  # 可選：medical（醫療）、beauty（美容美髮）、restaurant（餐廳）、
+  #       fitness（健身）、education（教育）、consulting（諮詢）
+  type: "medical"
+  
+  # 副標題/標語（選填）
+  tagline: "您的家庭健康守護者"
+  
+  # 首頁大標題
+  hero:
+    line1: "線上掛號"
+    line2: "預約平台"
+    description: "快速掛號、選擇醫師、預約時段，全程線上完成，節省您的等候時間。"
+
+# ── 聯絡資訊 ────────────────────────────────────────────
+contact:
+  phone: "02-2345-6789"
+  email: "info@clinic.com"
+  address: "台北市大安區忠孝東路四段 123 號 2 樓"
+  
+  # 營業/門診時間
+  hours:
+    weekday: "週一至週五 09:00 – 21:00"
+    weekend: "週六 09:00 – 17:00"
+    closed: "週日、國定假日"
+
+# ── 顏色風格 ────────────────────────────────────────────
+colors:
+  # 主色（深色，用於文字和標題）
+  primary: "#2C1810"
+  
+  # 強調色（用於按鈕、標籤、連結）
+  accent: "#D4704A"
+  
+  # 背景色（淺色）
+  background: "#FAF8F5"
+  
+  # 邊框/線條色
+  border: "#E8E3DB"
+
+# ── 服務提供者（醫師/設計師/教練等）──────────────────
+providers:
+  # 範例：醫療診所的醫師
+  - name: "林俊宏"
+    title: "醫師"
+    specialty: "家庭醫學科"
+    experience: "15 年"
+    description: "擅長慢性病管理、預防保健"
+    photo: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=100&h=100&fit=crop"
+    available: true
+  
+  - name: "陳雅玲"
+    title: "醫師"
+    specialty: "內科"
+    experience: "12 年"
+    description: "擅長代謝疾病、腸胃科"
+    photo: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&h=100&fit=crop"
+    available: true
+  
+  - name: "王大明"
+    title: "醫師"
+    specialty: "小兒科"
+    experience: "18 年"
+    description: "擅長兒童發展、疫苗接種"
+    photo: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=100&h=100&fit=crop"
+    available: true
+
+# ── 服務項目 ────────────────────────────────────────────
+services:
+  # 醫療診所範例
+  - name: "一般門診"
+    duration: "15 分鐘"
+    price: "250"
+    icon: "＋"
+    description: "一般感冒、發燒、慢性病回診"
+  
+  - name: "健康檢查諮詢"
+    duration: "30 分鐘"
+    price: "500"
+    icon: "◇"
+    description: "健康檢查報告解說與建議"
+  
+  - name: "慢性病追蹤"
+    duration: "20 分鐘"
+    price: "350"
+    icon: "○"
+    description: "高血壓、糖尿病定期追蹤"
+  
+  - name: "疫苗接種"
+    duration: "10 分鐘"
+    price: "依疫苗定價"
+    icon: "△"
+    description: "流感、肺炎等疫苗接種服務"
+
+# ── 預約設定 ────────────────────────────────────────────
+booking:
+  # 營業日（週幾）
+  # 0=週日, 1=週一, 2=週二, ..., 6=週六
+  business_days: [1, 2, 3, 4, 5, 6]  # 週一到週六
+  
+  # 休息日
+  closed_days: [0]  # 週日
+  
+  # 時段設定（依產業不同）
+  time_slots:
+    morning:
+      label: "上午診 Morning"
+      enabled: true
+      times:
+        - "08:30"
+        - "09:00"
+        - "09:30"
+        - "10:00"
+        - "10:30"
+        - "11:00"
+        - "11:30"
+    
+    afternoon:
+      label: "下午診 Afternoon"
+      enabled: true
+      times:
+        - "14:00"
+        - "14:30"
+        - "15:00"
+        - "15:30"
+        - "16:00"
+        - "16:30"
+        - "17:00"
+        - "17:30"
+    
+    evening:
+      label: "晚診 Evening"
+      enabled: true
+      times:
+        - "18:30"
+        - "19:00"
+        - "19:30"
+        - "20:00"
+        - "20:30"
+
+  # 預約限制
+  restrictions:
+    # 最多可預約幾天後
+    max_days_ahead: 30
+    
+    # 最少需提前多久預約（小時）
+    min_hours_ahead: 2
+    
+    # 取消預約需提前多久通知（小時）
+    cancel_hours: 2
+
+# ── 客戶資料欄位 ────────────────────────────────────────
+customer_form:
+  # 必填欄位
+  required_fields:
+    - name: "姓名"
+      type: "text"
+      placeholder: "請輸入真實姓名"
+    
+    - name: "電話"
+      type: "tel"
+      placeholder: "0912-345-678"
+    
+    - name: "身分證字號"
+      type: "text"
+      placeholder: "A123456789"
+      # 僅限醫療使用，其他產業可移除
+      business_types: ["medical"]
+  
+  # 選填欄位
+  optional_fields:
+    - name: "電子信箱"
+      type: "email"
+      placeholder: "example@mail.com"
+    
+    - name: "健保卡號"
+      type: "text"
+      placeholder: "若有健保請填寫"
+      business_types: ["medical"]
+    
+    - name: "主要症狀"
+      type: "textarea"
+      placeholder: "請簡短描述您的症狀"
+      business_types: ["medical"]
+
+# ── 注意事項 ────────────────────────────────────────────
+notices:
+  - "請於預約時段前 10 分鐘報到"
+  - "攜帶健保卡及身分證件"
+  - "如需取消請提前 2 小時通知"
+  - "初診患者請提早 15 分鐘填寫病歷"
+  - "發燒超過 38°C 請先電話告知"
+
+# ── 成功訊息 ────────────────────────────────────────────
+confirmation:
+  title: "預約成功！"
+  message: "您的預約已確認，我們將以簡訊通知您。"
+  reminder: "請於預約時段前 10 分鐘報到，攜帶健保卡及身分證件。"
+
+# ── SEO 與後設資料 ──────────────────────────────────────
+meta:
+  title: "仁愛家庭診所 - 線上預約掛號系統"
+  description: "快速線上掛號，選擇醫師與時段，節省您的等候時間。"
+  keywords: "診所預約, 線上掛號, 家庭醫學科, 台北診所"
+
+# ── 額外功能開關 ────────────────────────────────────────
+features:
+  # 是否顯示醫師/服務提供者照片
+  show_provider_photos: true
+  
+  # 是否允許「不指定服務提供者」選項
+  allow_any_provider: true
+  
+  # 是否顯示剩餘名額
+  show_availability: true
+  
+  # 是否需要驗證手機（簡訊 OTP）
+  require_phone_verification: false
+  
+  # 是否整合 Google Calendar
+  google_calendar_integration: false
+  
+# ── 進階：多語言（選填）────────────────────────────────
+# 若不需要多語言，整個 languages 區塊可移除
+languages:
+  enabled: false
+  default: "zh-TW"
+  available:
+    - code: "zh-TW"
+      name: "繁體中文"
+    - code: "en"
+      name: "English"
+
+# ============================================================
+# 填寫完成檢查清單
+# ============================================================
+# □ business.name - 店家名稱
+# □ business.type - 產業類型
+# □ contact.phone - 聯絡電話
+# □ contact.hours - 營業時間
+# □ providers - 至少 1 位服務提供者
+# □ services - 至少 3 個服務項目
+# □ booking.time_slots - 預約時段設定
+# □ notices - 注意事項（至少 3 條）
+# ============================================================
